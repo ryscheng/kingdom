@@ -1,0 +1,32 @@
+{
+  "name": "turnupthebaas",
+  "version": "1.0.0",
+  "description": "Privacy-Preserving BaaS",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp build; node build/index.js",
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryscheng/turnupthebaas.git"
+  },
+  "keywords": [
+    "baas",
+    "crypto",
+    "encryption",
+    "privacy"
+  ],
+  "author": "Raymond Cheng <me@raymondcheng.net> (https://raymondcheng.net)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ryscheng/turnupthebaas/issues"
+  },
+  "homepage": "https://github.com/ryscheng/turnupthebaas#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.2.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-sourcemaps": "^1.5.2"
+  }
+}
