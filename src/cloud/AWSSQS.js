@@ -1,5 +1,6 @@
+import AWS from "aws-sdk"
 
-export class AWSElastiCache {
+export class AWSSQS {
   constructor () {
     this.testVar = "asdf";
   }
