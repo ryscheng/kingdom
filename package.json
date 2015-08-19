@@ -4,7 +4,7 @@
   "description": "Privacy-Preserving BaaS",
   "main": "index.js",
   "scripts": {
-    "start": "gulp build; node build/index.js",
+    "start": "gulp build && node build/index.js",
     "test": "gulp test"
   },
   "repository": {
@@ -27,7 +27,9 @@
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.0",
     "gulp-concat": "^2.6.0",
-    "gulp-sourcemaps": "^1.5.2"
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-eslint": "~1.0.0",
+    "babel-eslint": "~4.0.10"
   },
   "dependencies": {
     "aws-sdk": "^2.1.44"
