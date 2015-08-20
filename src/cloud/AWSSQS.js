@@ -18,6 +18,7 @@ export class AWSSQS {
     this.credentials = null;
     this.cognitoIdentity = null;
     this.sqs = null;
+    this.myQueue = null;
     
     this._init();
   }
@@ -25,9 +26,6 @@ export class AWSSQS {
   _init() {
     // Cached IdentityId
     let id = localStorage.getItem(CACHED_ID_KEY);
-
-    // Set AWS Region
-    AWS.config.region = AWS_REGION;
 
     // AWS Credentials
     if (AWS.config.credentials !== null &&
@@ -46,25 +44,52 @@ export class AWSSQS {
         IdentityPoolId: AWS_IDENTITYPOOLID,
       });
     }
-
+    
+    // Configure AWS
+    AWS.config.region = AWS_REGION;
     AWS.config.credentials = this.credentials;
     this.cognitoIdentity = new AWS.CognitoIdentity();
     this.sqs = new AWS.SQS();
+   
+    // Create my mailbox
+    Q.ninvoke(this.sqs, "listQueues", {}).then((data) => {
+      // this.credentials.identityId is only populated after first request
+      localStorage.setItem(CACHED_ID_KEY, this.credentials.identityId);
+      console.log(`IdentityId: ${this.credentials.identityId}`);
+
+      return Q.ninvoke(this.sqs, "createQueue", {
+        QueueName: this._getQueueName(this.credentials.identityId),
+        Attributes: {
+          ReceiveMessageWaitTimeSeconds: "20",
+          VisibilityTimeout: "30"
+        }
+      })
+    }).then((data) => {
+      this.myQueue = new AWS.SQS({ params: { QueueUrl: data.QueueUrl } });
+    }).catch(this._onErr.bind(this));
+
+  }
+
+  _getQueues() {
+    Q.ninvoke(this.sqs, "listQueues", {}).then((data) => {
+      console.log(data);
+      if (data.QueueUrls.length < 10) {
+        setTimeout(this._getQueues.bind(this), 1000);
+      }
+    }).catch(this._onErr.bind(this));
+  }
+  
+  _getQueueName(identityId) {
+    return identityId.replace(/:/g, "_");
+  }
+
+  _onErr(err) {
+    console.error(`ERROR: ${err}`);
   }
 
   print(str) {
-    console.log(`${str} - ${JSON.stringify(this.credentials)}`);
-    console.log(`IdentityId: ${JSON.stringify(this.credentials.identityId)}`);
-    Q.ninvoke(this.sqs, "createQueue", {
-      QueueName: "Test"
-    }).then((data) => {
-      console.log(data);
-      console.log(`IdentityId: ${JSON.stringify(this.credentials.identityId)}`);
-      localStorage.setItem(CACHED_ID_KEY, this.credentials.identityId);
-    }).catch((err) => {
-      console.log("!!!ERROR!!!");
-      console.error(err);
-    });
+    console.log(str);
+    this._getQueues();
 
   }
 }
