@@ -8,8 +8,9 @@ if (typeof localStorage === "undefined" ||
   localStorage = new LocalStorage("/tmp/node-localstorage");
 }
 
-const IDENTITYID_KEY = "AWS_IdentityId";
-const IDENTITYPOOLID = "us-east-1:b432afab-89a4-490d-8e42-9df309196a82";
+const CACHED_ID_KEY = "AWS_IdentityId";
+const AWS_IDENTITYPOOLID = "us-east-1:b432afab-89a4-490d-8e42-9df309196a82";
+const AWS_REGION = "us-east-1"
 
 export class AWSSQS {
   constructor () {
@@ -23,10 +24,10 @@ export class AWSSQS {
   
   _init() {
     // Cached IdentityId
-    let id = localStorage.getItem(IDENTITYID_KEY);
+    let id = localStorage.getItem(CACHED_ID_KEY);
 
     // Set AWS Region
-    AWS.config.region = "us-east-1";
+    AWS.config.region = AWS_REGION;
 
     // AWS Credentials
     if (AWS.config.credentials !== null &&
@@ -36,13 +37,13 @@ export class AWSSQS {
     } else if (id !== null && typeof id !== "undefined") {
       // Cached Identity Id
       this.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IDENTITYPOOLID,
+        IdentityPoolId: AWS_IDENTITYPOOLID,
         IdentityId: id
       });
     } else {
       // Nothing cached, create a new one
       this.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: IDENTITYPOOLID,
+        IdentityPoolId: AWS_IDENTITYPOOLID,
       });
     }
 
@@ -59,7 +60,7 @@ export class AWSSQS {
     }).then((data) => {
       console.log(data);
       console.log(`IdentityId: ${JSON.stringify(this.credentials.identityId)}`);
-      localStorage.setItem(IDENTITYID_KEY, this.credentials.identityId);
+      localStorage.setItem(CACHED_ID_KEY, this.credentials.identityId);
     }).catch((err) => {
       console.log("!!!ERROR!!!");
       console.error(err);
