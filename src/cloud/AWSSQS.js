@@ -3,28 +3,50 @@ import Q from "q";
 import { LocalStorage } from "node-localstorage";
 
 var localStorage;
-
 if (typeof localStorage === "undefined" || 
     localStorage === null) {
   localStorage = new LocalStorage("/tmp/node-localstorage");
 }
 
+const IDENTITYID_KEY = "AWS_IdentityId";
+const IDENTITYPOOLID = "us-east-1:b432afab-89a4-490d-8e42-9df309196a82";
+
 export class AWSSQS {
   constructor () {
     // Instance vars
     this.credentials = null;
+    this.cognitoIdentity = null;
+    this.sqs = null;
+    
+    this._init();
+  }
+  
+  _init() {
+    // Cached IdentityId
+    let id = localStorage.getItem(IDENTITYID_KEY);
 
-    // Init
-    if (AWS.config.credentials === null ||
-        typeof AWS.config.credentials === "undefined") {
-      this.credentials = new AWS.CognitoIdentityCredentials({
-        IdentityPoolId: 'us-east-1:b432afab-89a4-490d-8e42-9df309196a82'
-      });
-      AWS.config.credentials = this.credentials;
-    } else {
-      this.credentials = AWS.config.credentials;
-    }
+    // Set AWS Region
     AWS.config.region = "us-east-1";
+
+    // AWS Credentials
+    if (AWS.config.credentials !== null &&
+        typeof AWS.config.credentials !== "undefined") {
+      // AWS already configured
+      this.credentials = AWS.config.credentials;
+    } else if (id !== null && typeof id !== "undefined") {
+      // Cached Identity Id
+      this.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: IDENTITYPOOLID,
+        IdentityId: id
+      });
+    } else {
+      // Nothing cached, create a new one
+      this.credentials = new AWS.CognitoIdentityCredentials({
+        IdentityPoolId: IDENTITYPOOLID,
+      });
+    }
+
+    AWS.config.credentials = this.credentials;
     this.cognitoIdentity = new AWS.CognitoIdentity();
     this.sqs = new AWS.SQS();
   }
@@ -37,12 +59,7 @@ export class AWSSQS {
     }).then((data) => {
       console.log(data);
       console.log(`IdentityId: ${JSON.stringify(this.credentials.identityId)}`);
-
-      return Q.ninvoke(this.cognitoIdentity, "getCredentialsForIdentity", {
-        IdentityId: this.credentials.identityId
-      });
-    }).then((data) => {
-      console.log(data);
+      localStorage.setItem(IDENTITYID_KEY, this.credentials.identityId);
     }).catch((err) => {
       console.log("!!!ERROR!!!");
       console.error(err);
