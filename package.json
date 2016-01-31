@@ -1,28 +1,27 @@
 {
-  "name": "turnupthebaas",
+  "name": "kingdom",
   "version": "1.0.0",
-  "description": "Privacy-Preserving BaaS",
+  "description": "Personal Assistant",
   "main": "index.js",
   "scripts": {
-    "start": "gulp build && node build/index.js",
+    "start": "gulp build && node src/index.js",
     "test": "gulp test"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ryscheng/turnupthebaas.git"
+    "url": "git+https://github.com/ryscheng/kingdom.git"
   },
   "keywords": [
-    "baas",
-    "crypto",
-    "encryption",
-    "privacy"
+    "ipa",
+    "assistant",
+    "home"
   ],
   "author": "Raymond Cheng <me@raymondcheng.net> (https://raymondcheng.net)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ryscheng/turnupthebaas/issues"
+    "url": "https://github.com/ryscheng/kingdom/issues"
   },
-  "homepage": "https://github.com/ryscheng/turnupthebaas#readme",
+  "homepage": "https://github.com/ryscheng/kingdom#readme",
   "devDependencies": {
     "browserify": "^13.0.0",
     "fs-extra": "^0.26.5",
@@ -36,6 +35,7 @@
   },
   "dependencies": {
     "hue.js": "^0.2.13",
+    "pocketsphinx": "^5.0.5",
     "q": "~1.4.1",
     "speechkitt": "^0.3.0"
   }

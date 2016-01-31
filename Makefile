@@ -1,11 +1,7 @@
 
-deps:
-	go get github.com/ryscheng/go-pocketsphinx
-	go get github.com/mesilliac/pulse-simple
-
 docker:
-	docker build -t ryscheng/ipa:latest .
+	docker build -t ryscheng/kingdom:latest .
 
 run:
-	docker run -i -t ryscheng/ipa /bin/bash
+	docker run --device /dev/snd -i -t ryscheng/kingdom /bin/bash
 
