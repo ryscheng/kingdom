@@ -24,16 +24,19 @@
   },
   "homepage": "https://github.com/ryscheng/turnupthebaas#readme",
   "devDependencies": {
+    "browserify": "^13.0.0",
+    "fs-extra": "^0.26.5",
     "gulp": "^3.9.0",
-    "gulp-babel": "^5.2.0",
     "gulp-concat": "^2.6.0",
-    "gulp-sourcemaps": "^1.5.2",
     "gulp-eslint": "~1.0.0",
-    "babel-eslint": "~4.0.10",
-    "q": "~1.4.1",
-    "node-localstorage": "~0.5.2"
+    "gulp-sourcemaps": "^1.5.2",
+    "gulp-uglify": "^1.5.1",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "aws-sdk": "^2.1.44"
+    "hue.js": "^0.2.13",
+    "q": "~1.4.1",
+    "speechkitt": "^0.3.0"
   }
 }

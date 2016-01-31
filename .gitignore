@@ -1,5 +1,6 @@
 ### Scrap
 .*.swp
+npm-debug.log
 
 ### Project
 build/
