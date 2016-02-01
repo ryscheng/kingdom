@@ -18,7 +18,7 @@ RUN apt-get install -y gcc automake autoconf libtool
 RUN apt-get install -y bison swig3.0 swig2.0 python python-all-dev
 #RUN ln -s /usr/bin/swig3.0 /usr/bin/swig
 
-# microphone (npm)
+# mic (npm)
 RUN apt-get install -y alsa-utils pulseaudio libpulse-dev
 
 # npm global tools
@@ -50,13 +50,21 @@ RUN ./configure
 RUN make
 RUN make install
 
-# Project
-ADD . /kingdom
-WORKDIR /kingdom
-
-RUN npm install
-
 # to locate libpocketsphinx.so
 RUN ldconfig
+
+# pocketsphinx models
+#RUN mkdir -p /kingdom/models
+#WORKDIR /kingdom/models
+#RUN wget http://downloads.sourceforge.net/project/cmusphinx/Acoustic%20and%20Language%20Models/US%20English%20Generic%20Acoustic%20Model/cmusphinx-en-us-5.2.tar.gz
+#RUN wget http://downloads.sourceforge.net/project/cmusphinx/Acoustic%20and%20Language%20Models/US%20English%20Generic%20Language%20Model/cmusphinx-5.0-en-us.lm.gz
+
+# Project dependencies
+ADD package.json /kingdom/package.json
+WORKDIR /kingdom
+RUN npm install
+
+# Add rest of files
+ADD . /kingdom
 
 #CMD ["sh", "/opt/iodine/start.sh"]
