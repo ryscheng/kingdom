@@ -24,6 +24,8 @@ RUN apt-get install -y alsa-utils pulseaudio libpulse-dev
 # npm global tools
 RUN npm install -g gulp
 
+# espeak and audio
+RUN apt-get install -y espeak mpg321 ffmpeg
 
 # pocketsphinx
 RUN mkdir -p /kingdom/third_party

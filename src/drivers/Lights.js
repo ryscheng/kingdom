@@ -4,6 +4,24 @@ var hue = require("hue.js");
 
 const APPNAME = "cray";
 
+var hueClient = new Hue("192.168.0.13");
+var lightsOn = false;
+
+hueClient.getLights().then((result) => {
+  //console.log(result);
+  for (var k in result) {
+    if (result.hasOwnProperty(k) && result[k].state.on == true) {
+      lightsOn = true;
+      break;
+    }
+  }
+  console.log("Lights on: " + lightsOn);
+}).catch((err) => {
+  console.error(err)
+})
+
+
+
 //http://192.168.0.13/debug/clip.html
 class Hue {
   constructor(addr) {

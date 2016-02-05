@@ -34,10 +34,12 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "espeak": "0.0.3",
     "hue.js": "^0.2.13",
     "mic": "^1.0.3",
+    "play-sound": "0.0.7",
     "pocketsphinx": "^5.0.5",
     "q": "~1.4.1",
-    "speechkitt": "^0.3.0"
+    "weather-js": "^1.0.2"
   }
 }
