@@ -4,13 +4,69 @@
 class Assistant {
   constructor() {
     this._plugins = [];
+    this._triggers = [];
+  }
+
+  _commandToRegExp(phrase) {
+    const optionalParam = /\s*\((.*?)\)\s*/g;
+    const optionalRegex = /(\(\?:[^)]+\))\?/g;
+    const namedParam = /(\(\?)?:\w+/g;
+    const splatParam = /\*\w+/g;
+    const escapeRegExp = /[\-{}\[\]+?.,\\\^$|#]/g;
+    let command = phrase.replace(escapeRegExp, '\\$&')
+                     .replace(optionalParam, '(?:$1)?')
+                     .replace(namedParam, function(match, optional) {
+                       return optional ? match : '([^\\s]+)';
+                     }).replace(splatParam, '(.*?)').replace(optionalRegex, '\\s*$1?\\s*');
+    return new RegExp('^' + command + '$', 'i');
+  }
+
+  printTriggers() {
+    console.log("Registered Triggers:");
+    for (let i = 0; i < this._triggers.length; i++) {
+      console.log("[" + this._triggers[i].plugin.name + "] " + this._triggers[i].phrase);
+    }
   }
 
   addPlugin(plugin) {
     this._plugins.push(plugin);
+    // Enumerate plugin's triggers
+    for (let phrase in plugin.triggers) {
+      if (plugin.triggers.hasOwnProperty(phrase)) {
+        // Check if valid function
+        if (typeof plugin.triggers[phrase] !== "function") {
+          console.error("Assistant.addPlugin: invalid trigger for " + plugin.name + ": " + phrase)
+          continue;
+        }
+
+        // Add to list of triggers
+        let commandRegEx = this._commandToRegExp(phrase);
+        this._triggers.push({
+          phrase: phrase,
+          command: commandRegEx,
+          plugin: plugin,
+          callback: plugin.triggers[phrase],
+        });
+      }
+    }
   }
 
   command(phrase) {
+    for (let i = 0; i < this._triggers.length; i++) {
+      let result = this._triggers[i].command.exec(phrase)
+      if (result) {
+        let parameters = result.slice(1);
+        console.log("Matches " + this._triggers[i].plugin.name + ":" + this._triggers[i].phrase);
+        this._triggers[i].callback.apply(this, parameters).then((response) => {
+          console.log(response);
+          //@todo Say response
+        }).catch((err) => {
+          console.error(err);
+          //@todo Say error
+        });
+        return true;
+      }
+    }
   }
 }
 

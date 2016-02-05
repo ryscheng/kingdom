@@ -2,33 +2,13 @@
 var Q = require("q");
 var hue = require("hue.js");
 
-const APPNAME = "cray";
-
-var hueClient = new Hue("192.168.0.13");
-var lightsOn = false;
-
-hueClient.getLights().then((result) => {
-  //console.log(result);
-  for (var k in result) {
-    if (result.hasOwnProperty(k) && result[k].state.on == true) {
-      lightsOn = true;
-      break;
-    }
-  }
-  console.log("Lights on: " + lightsOn);
-}).catch((err) => {
-  console.error(err)
-})
-
-
-
-//http://192.168.0.13/debug/clip.html
-class Hue {
-  constructor(addr) {
-    this._addr = addr
+class Lights {
+  constructor(appName, addr) {
+    this._appName = appName;
+    this._addr = addr;
     this._client = hue.createClient({
-      stationIp: "192.168.0.13",
-      appName: "cray"
+      stationIp: addr,
+      appName: appName
     });
     this._cacheLights = {};
     this._init();
@@ -49,16 +29,9 @@ class Hue {
       } else if (err) {
         console.error("Hue error: ", err)
       } else {
+        // Already registered, no errors
       }
     });
-  }
-
-  getLights() {
-    var promise = Q.ninvoke(this._client, "lights");
-    promise.then((lights) => {
-      this._cacheLights = lights;
-    })
-    return promise;
   }
 
   _huecall(method, name, args) {
@@ -78,6 +51,23 @@ class Hue {
     }
     return Q.all(promises)
   }
+  
+  getState() {
+    return Q.ninvoke(this._client, "lights").then((result) => {
+      var ret = {};
+      this._cacheLights = lights;
+      //console.log(lights);
+      for (var k in result) {
+        if (result.hasOwnProperty(k)) {
+          ret[result[k].name] = {
+            on: result[k].state.on
+          }
+        }
+      }
+      //console.log(ret);
+      return Promise.resolve(ret);
+    });
+  }
 
   turnOn(name) {
     return this._huecall("on", name, [])
@@ -95,6 +85,7 @@ class Hue {
     return this._huebroadcast("off", [])
   }
 
+
 }
 
-module.exports.Hue = Hue;
+module.exports = Lights;
