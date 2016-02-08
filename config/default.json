@@ -1,0 +1,11 @@
+{
+  "app": {
+    "name": "kingdom"
+  },
+  "hue": {
+    "addr": ""
+  },
+  "hypem": {
+    "username": ""
+  }
+}
