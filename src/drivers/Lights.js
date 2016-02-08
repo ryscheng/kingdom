@@ -52,6 +52,12 @@ class Lights {
     return Q.all(promises)
   }
   
+  /**
+   *
+   * @return {Object.<string, Object>} name -> {
+   *  on: bool    // light is on/off
+   * }
+   **/
   getState() {
     return Q.ninvoke(this._client, "lights").then((result) => {
       var ret = {};

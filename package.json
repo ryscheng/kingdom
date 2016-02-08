@@ -4,7 +4,7 @@
   "description": "Personal Assistant",
   "main": "index.js",
   "scripts": {
-    "start": "gulp build && node src/index.js",
+    "start": "node src/index.js",
     "test": "gulp test"
   },
   "repository": {
@@ -34,7 +34,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
-    "espeak": "0.0.3",
+    "config": "^1.19.0",
     "hue.js": "^0.2.13",
     "hype.js": "0.0.4",
     "hypem-stream": "^1.0.1",
@@ -42,6 +42,7 @@
     "play-sound": "0.0.7",
     "pocketsphinx": "^5.0.5",
     "q": "~1.4.1",
+    "say": "^0.6.0",
     "weather-js": "^1.0.2"
   }
 }

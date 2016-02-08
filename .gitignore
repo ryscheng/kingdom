@@ -5,6 +5,7 @@ npm-debug.log
 ### Project
 build/
 dist/
+config/
 
 ### NODE
 node_modules/

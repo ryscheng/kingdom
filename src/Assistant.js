@@ -4,6 +4,7 @@
 class Assistant {
   constructor() {
     this._plugins = [];
+    this._interfaces = [];
     this._triggers = [];
   }
 
@@ -51,23 +52,34 @@ class Assistant {
     }
   }
 
+  addInterface(iface) {
+    this._interfaces.push(iface);
+    iface.on("command", (phrase) => {
+      this.command(phrase.trim()).then(function(iface, response) {
+        this._interfaces.forEach((i) => {
+          i.respond(response);
+        });
+        iface.startListening();
+      }.bind(this, iface)).catch(function(iface, err) {
+        iface.respond("Error, " + err);
+        console.error(err);
+        iface.startListening();
+      }.bind(this, iface));
+    });
+  }
+
   command(phrase) {
     for (let i = 0; i < this._triggers.length; i++) {
       let result = this._triggers[i].command.exec(phrase)
       if (result) {
         let parameters = result.slice(1);
         console.log("Matches " + this._triggers[i].plugin.name + ":" + this._triggers[i].phrase);
-        this._triggers[i].callback.apply(this, parameters).then((response) => {
-          console.log(response);
-          //@todo Say response
-        }).catch((err) => {
-          console.error(err);
-          //@todo Say error
-        });
-        return true;
+        return this._triggers[i].callback.apply(this, parameters);
       }
     }
+    return Promise.reject("Unrecognized command");
   }
 }
 
 module.exports = Assistant;
+

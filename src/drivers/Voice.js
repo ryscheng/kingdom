@@ -1,19 +1,29 @@
 "use strict";
-let espeak = require("espeak");
+const say = require("say");
 
+var DEFAULT_VOICE;
+if (process.platform === "darwin") {
+  DEFAULT_VOICE = "Alex";
+} else {
+  // say uses Festival for Linux
+  DEFAULT_VOICE = null;
+}
 
-class Mouth {
-  constructor() {
+class Voice {
+  constructor(voiceName) {
+    this._voiceName = voiceName;
+    if (typeof voiceName === "undefined") {
+      this._voiceName = DEFAULT_VOICE;
+    }
   }
 
   say(phrase) {
-    espeak.speak(phrase, (err, wav) => {
-      
-    });
+    return new Promise(function(phrase, resolve, reject) {
+      say.speak(this._voiceName, phrase, function(resolve, reject) {
+        resolve();
+      }.bind(this, resolve, reject));
+    }.bind(this, phrase));
   }
 }
 
-var m = new Mouth();
-m.say("Hello");
-
-module.exports.Mouth = Mouth;
+module.exports = Voice;

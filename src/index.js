@@ -1,38 +1,34 @@
 "use strict";
 
-const readline = require("readline");
-const Assistant = require("./Assistant"); 
-const Lights = require("./drivers/Lights");
-const Weather = require("./plugins/Weather");
-const LightControl = require("./plugins/LightControl");
-const HypeMachine = require("./plugins/HypeMachine");
-
-const APP_NAME = "cray";
-const HUE_BRIDGE_IP = "192.168.0.13"; //http://192.168.0.13/debug/clip.html
-const HYPEM_USERNAME = "djmontagged"
+const config = require("config");
 
 // Init assistant
-const app = new Assistant();
-// Init drivers
-const lights = new Lights(APP_NAME, HUE_BRIDGE_IP);
-// Init plugins
+const Assistant = require("./Assistant");
+const app = new Assistant(); 
+/** DRIVERS **/
+/////// http://192.168.0.13/debug/clip.html
+//const Lights = require("./drivers/Lights");
+//const lights = new Lights(config.get("app.name"), config.get("hue.addr"));
+const Voice = require("./drivers/Voice");
+const voice = new Voice();
+/** PLUGINS **/
+const Weather = require("./plugins/Weather");
 const weather = new Weather();
-const lightControl = new LightControl(lights);
-const hypem = new HypeMachine(HYPEM_USERNAME);
 app.addPlugin(weather);
-app.addPlugin(lightControl);
+//const LightControl = require("./plugins/LightControl");
+//const lightControl = new LightControl(lights);
+//app.addPlugin(lightControl);
+const HypeMachine = require("./plugins/HypeMachine");
+const hypem = new HypeMachine(config.get("hypem.username"));
 app.addPlugin(hypem);
+/** I/O **/
+const CLI = require("./interfaces/CLI");
+const cli = new CLI();
+app.addInterface(cli);
+const SpeakInterface = require("./interfaces/SpeakInterface");
+const speakInterface = new SpeakInterface(voice);
+app.addInterface(speakInterface);
+
 app.printTriggers();
-
-// Setup CLI
-const rl = readline.createInterface(process.stdin, process.stdout);
-rl.setPrompt("Yes?>");
-rl.prompt();
-rl.on("line", (line) => {
-  app.command(line.trim());
-  rl.prompt();
-}).on("close", () => {
-  console.log("\nHave a great day!");
-  process.exit(0);
-});
-
+cli.startListening();
+//speakInterface.startListening();
