@@ -10,8 +10,7 @@ class Weather {
     // Public properties
     this.name = "Weather"
     this.triggers = {
-      "weather (in) *searchQuery": this.getWeather.bind(this),
-      "what is the weather (in) *searchQuery": this.getWeather.bind(this)
+      "(what) (what's) (is) (the) weather (in) *searchQuery": this.getWeather.bind(this)
     };
   }
 

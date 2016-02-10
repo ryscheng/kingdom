@@ -61,8 +61,8 @@ class Lights {
   getState() {
     return Q.ninvoke(this._client, "lights").then((result) => {
       var ret = {};
-      this._cacheLights = lights;
-      //console.log(lights);
+      this._cacheLights = result;
+      //console.log(result);
       for (var k in result) {
         if (result.hasOwnProperty(k)) {
           ret[result[k].name] = {

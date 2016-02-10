@@ -6,7 +6,7 @@ class LightControl {
     // Public properties
     this.name = "Light Control"
     this.triggers = {
-      "(turn) light(s) *onoff": this.lightsOnOff.bind(this),
+      "(turn) (the) light(s) *onoff": this.lightsOnOff.bind(this),
     };
 
     this._lights = lights;
@@ -34,6 +34,8 @@ class LightControl {
       //@todo test 
       if (onoff === "off" && isAllOff(lightState) === true) {
         return Promise.resolve("Lights are already off")
+      } else if (onoff === "on" && isAllOff(lightState) === false) {
+        return Promise.resolve("Lights are already on")
       } else if (onoff === "on") {
         return this._lights.allOn();
       } else if (onoff === "off") {
@@ -42,8 +44,8 @@ class LightControl {
         return Promise.resolve("Something went wrong");
       }
     }.bind(this, onoff)).then((result) => {
-      if (result === "" || result === null || typeof result === "undefined") {
-        result = "Done";
+      if (typeof result !== "string") {
+        result = "Consider it done";
       }
       return Promise.resolve(result);
     });
