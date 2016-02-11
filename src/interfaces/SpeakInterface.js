@@ -13,7 +13,7 @@ class SpeakInterface extends EventEmitter {
   }
 
   respond(response) {
-    this._voice.say(response);
+    return this._voice.say(response);
   }
 }
 

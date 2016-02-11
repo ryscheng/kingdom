@@ -43,6 +43,7 @@
     "pocketsphinx": "^5.0.5",
     "q": "~1.4.1",
     "say": "^0.6.0",
-    "weather-js": "^1.0.2"
+    "weather-js": "^1.0.2",
+    "xmlhttprequest": "^1.8.0"
   }
 }

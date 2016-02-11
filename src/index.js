@@ -1,6 +1,8 @@
 "use strict";
 
 const config = require("config");
+// Necessary for hype.js
+global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
 // Init assistant
 const Assistant = require("./Assistant");

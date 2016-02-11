@@ -11,6 +11,7 @@ class HypeMachine {
     this.triggers = {
       "play :playlist hype": this.play.bind(this),
     };
+    this.queue = [];
 
     this._username = username;
   }
@@ -31,8 +32,15 @@ class HypeMachine {
       ref = refs[playlist];
     }
 
-    return Q.nfapply(ref, ["0"]).then((result) => {
-      console.log(result);
+    return Q.nfapply(ref, [ "0" ]).then((result) => {
+      for (let i = 0; i < result.length; i++) {
+        if (result[i] !== null && typeof result[i] === "object" && result[i].hasOwnProperty("tracks")) {
+          const tracks = result[i].tracks;
+          for (let j = 0; j < result[i].tracks.length; j++) {
+            this.queue.push(result[i].tracks[j]);
+          }
+        }
+      }
       return Promise.resolve("Woo");
     });
   }
