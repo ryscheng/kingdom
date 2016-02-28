@@ -6,6 +6,13 @@ class Assistant {
     this._plugins = [];
     this._interfaces = [];
     this._triggers = [];
+
+    this._triggers.push({
+      phrase: "help",
+      command: this._commandToRegExp("help"),
+      plugin: { name: "General" },
+      callback: this.printTriggers.bind(this),
+    });
   }
 
   _commandToRegExp(phrase) {
@@ -27,6 +34,7 @@ class Assistant {
     for (let i = 0; i < this._triggers.length; i++) {
       console.log("[" + this._triggers[i].plugin.name + "] " + this._triggers[i].phrase);
     }
+    return Promise.resolve("Woo");
   }
 
   addPlugin(plugin) {

@@ -21,11 +21,20 @@ RUN apt-get install -y bison swig3.0 swig2.0 python python-all-dev
 # mic (npm)
 RUN apt-get install -y alsa-utils pulseaudio libpulse-dev
 
+# speaker (npm)
+RUN apt-get install -y libasound2-dev
+
+# lame (npm)
+RUN apt-get install -y libmp3lame-dev libmpg123-dev
+
+# espeak (npm)
+RUN apt-get install -y espeak
+
+# audio players
+RUN apt-get install -y mplayer mpg321 ffmpeg
+
 # npm global tools
 RUN npm install -g gulp
-
-# espeak and audio
-RUN apt-get install -y espeak mplayer mpg321 ffmpeg
 
 # pocketsphinx
 RUN mkdir -p /kingdom/third_party

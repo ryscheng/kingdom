@@ -38,11 +38,14 @@
     "hue.js": "^0.2.13",
     "hype.js": "0.0.4",
     "hypem-stream": "^1.0.1",
+    "lame": "^1.2.3",
     "mic": "^1.0.3",
+    "pcm-volume": "^1.0.0",
     "play-sound": "0.0.7",
     "pocketsphinx": "^5.0.5",
     "q": "~1.4.1",
     "say": "^0.6.0",
+    "speaker": "^0.2.6",
     "weather-js": "^1.0.2",
     "xmlhttprequest": "^1.8.0"
   }
