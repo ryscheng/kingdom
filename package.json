@@ -37,15 +37,17 @@
     "config": "^1.19.0",
     "hue.js": "^0.2.13",
     "hype.js": "0.0.4",
-    "hypem-stream": "^1.0.1",
     "lame": "^1.2.3",
+    "lazystream": "^1.0.0",
     "mic": "^1.0.3",
+    "needle": "^1.0.0",
     "pcm-volume": "^1.0.0",
     "play-sound": "0.0.7",
     "pocketsphinx": "^5.0.5",
     "q": "~1.4.1",
     "say": "^0.6.0",
     "speaker": "^0.2.6",
+    "through": "^2.3.8",
     "weather-js": "^1.0.2",
     "xmlhttprequest": "^1.8.0"
   }

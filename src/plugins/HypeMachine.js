@@ -1,8 +1,10 @@
 "use strict";
 
-let hypejs = require("hype.js");
-let hypemStream = require("hypem-stream");
-let Q = require("q");
+const hypejs = require("hype.js");
+const lazystream = require("lazystream");
+const needle = require("needle");
+const lame = require("lame");
+const Q = require("q");
 
 class HypeMachine {
   constructor(audioOut, username) {
@@ -56,17 +58,26 @@ class HypeMachine {
         }
       }
 
-      let promises = [];
       for (let i = 0; i < this._cachedResult.length; i++) {
-        promises.push(Q.nfapply(hypemStream.song, [ this._cachedResult[i].id ]));
-      }
-      return Q.all(promises);
-    }).then((result) => {
-      for (let i = 0; i < result.length; i++) {
-        this._cachedResult[i].mp3stream = result[i];
+        this._cachedResult[i]._mp3url = "https://hypem.com/serve/public/"+this._cachedResult[i].id;
+        this._cachedResult[i].createStream = function(url) {
+          return needle.get(url, { compressed: true, follow_max: 5 })
+            .once("end", () => {})
+            .pipe(new lame.Decoder())
+            .once("format", (format) => {})
+            .once("finish", () => {});
+        }.bind(this, this._cachedResult[i]._mp3url);
+        /**
+        this._cachedResult[i].mp3stream = new lazystream.Readable(function(url, opts) {
+          return needle.get(url, { compressed: true, follow_max: 5 });
+        }.bind(this, this._cachedResult[i]._mp3url));
+        this._cachedResult[i].mp3stream.on("error", function(entry, error) {
+          console.error("lazystream:" + error + ": " + entry.artist + " - " + entry.title);
+        }.bind(this, this._cachedResult[i]));
+        **/
         this._audioOut.queueSong(this._cachedResult[i]);
       }
-      console.log(this._cachedResult);
+      //console.log(this._cachedResult);
       response += "ready to play";
       return Promise.resolve(response);
     });

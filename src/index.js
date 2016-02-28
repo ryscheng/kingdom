@@ -21,10 +21,10 @@ const LightControl = require("./plugins/LightControl");
 app.addPlugin(new LightControl(lights));
 const MusicControl = require("./plugins/MusicControl");
 app.addPlugin(new MusicControl(audioOut));
-const Weather = require("./plugins/Weather");
-app.addPlugin(new Weather());
 const HypeMachine = require("./plugins/HypeMachine");
 app.addPlugin(new HypeMachine(audioOut, config.get("hypem.username")));
+const Weather = require("./plugins/Weather");
+app.addPlugin(new Weather());
 
 /** I/O **/
 const CLI = require("./interfaces/CLI");
