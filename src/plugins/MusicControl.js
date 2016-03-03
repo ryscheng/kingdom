@@ -9,10 +9,10 @@ class MusicControl {
       "stop music": this.stop.bind(this),
       "pause music": this.pause.bind(this),
       "resume music": this.resume .bind(this),
+      "clear music (playlist)": this.clear.bind(this),
       "next song": this.next.bind(this),
       "previous song": this.previous.bind(this),
       "play song again": this.again.bind(this),
-      "clear music (playlist)": this.clear.bind(this),
       "what is the next song": this.nextSong.bind(this),
     };
 

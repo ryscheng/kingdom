@@ -42,10 +42,8 @@ micInputStream.on('data', function(data) {
     console.log("Detected keyword, restarting search");
     console.log("Lights on: " + lightsOn);
     if (lightsOn) {
-      //hueClient.allOff();
       lightsOn = false;
     } else {
-      //hueClient.allOn();
       lightsOn = true;
     }
     //console.log(hyp)
