@@ -1,6 +1,5 @@
 "use strict";
 const say = require("say");
-const through = require("through");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 
@@ -151,13 +150,4 @@ class AudioOut {
 }
 
 module.exports = AudioOut;
-
-    /**
-    let debug = through(function write(data) {
-      console.log(data);
-      this.queue(data);
-    }, function end() {
-      console.log("end");
-    });
-    **/
 

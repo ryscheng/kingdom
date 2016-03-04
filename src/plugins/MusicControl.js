@@ -2,8 +2,31 @@
 
 class MusicControl {
   constructor(audioOut) {
+    // Private
+    this._audioOut = audioOut;
+
     // Public properties
-    this.name = "Music Control"
+    this.name = "Music Control";
+    this.intents = {
+      play: {
+        description: "TODO",
+        help: "TODO",
+        callback: this.getWeather.bind(this),
+        parameters: [
+          { name: "Location", type: "US_CITY" },
+        ],
+        utterances: [
+          "weather",
+          "what is the weather",
+          "what's the weather",
+          "weather in {Location}",
+          "what is the weather in {Location}",
+          "what's the weather in {Location}",
+        ],
+      }
+    };
+    this.types = {};
+    /**
     this.triggers = {
       "play music": this.play.bind(this),
       "stop music": this.stop.bind(this),
@@ -15,8 +38,7 @@ class MusicControl {
       "play song again": this.again.bind(this),
       "what is the next song": this.nextSong.bind(this),
     };
-
-    this._audioOut = audioOut;
+    **/
   }
 
   play() {
@@ -25,7 +47,7 @@ class MusicControl {
       return Promise.resolve("please queue up some songs first");
     }
     if (this._audioOut.isPlaying()) {
-      return Promise.resolve("music already playing");;
+      return Promise.resolve("music already playing");
     }
 
     this._audioOut.play();

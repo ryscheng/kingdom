@@ -8,22 +8,11 @@ const Q = require("q");
 
 class HypeMachine {
   constructor(audioOut, username) {
-    // Public properties
-    this.name = "Hype Machine"
-    this.triggers = {
-      "queue :playlist hype": this.queue.bind(this),
-    };
-    this._cachedResult = null;
-
+    // Private
     this._audioOut = audioOut;
     this._username = username;
-  }
-
-  queue(playlist) {
-    console.log("HypeMachine.queue("+playlist+")");
-    let ref; 
-    let response = "";
-    const refs = {
+    this._cachedResult = null;
+    this._queries= {
       my: hypejs.profile.loved.bind(hypejs.profile, this._username),
       feed: hypejs.profile.feed.bind(hypejs.profile, this._username),
       history: hypejs.profile.history.bind(hypejs.profile, this._username),
@@ -31,14 +20,45 @@ class HypeMachine {
       popular: hypejs.popular.now,
       latest: hypejs.latest.all,
     };
+
+    // Public properties
+    this.name = "Hype Machine"
+    this.intents = {
+      queue: {
+        description: "TODO",
+        help: "TODO",
+        callback: this.queue.bind(this),
+        parameters: [
+          { name: "Playlist", type: "HYPEM_PLAYLISTS" },
+        ],
+        utterances: [
+          "queue {Playlist} hype",
+        ],
+      }
+    };
+    this.types = {
+      "HYPEM_PLAYLISTS": Object.keys(this._queries),
+    }
+    /**
+    this.triggers = {
+      "queue :playlist hype": this.queue.bind(this),
+    };
+    **/
+  }
+
+  queue(playlist) {
+    console.log("HypeMachine.queue("+playlist+")");
+    let ref; 
+    let response = "";
+
     // Set defaults
-    if (!refs.hasOwnProperty(playlist) ||
+    if (!this._queries.hasOwnProperty(playlist) ||
         playlist == null || 
         typeof playlist === "undefined") {
-      ref = refs["my"];
+      ref = this._queries["my"];
       response += "unrecognized playlist. defaulting to my favorites. ";
     } else {
-      ref = refs[playlist];
+      ref = this._queries[playlist];
     }
 
     // Get playlist information

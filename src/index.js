@@ -6,7 +6,7 @@ const Init = require("./Initialize");
 global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
 function forEach(obj, cb) {
-  for (var k in obj) {
+  for (let k in obj) {
     if (obj.hasOwnProperty(k)) {
       cb(obj[k]);
     }
@@ -15,7 +15,7 @@ function forEach(obj, cb) {
 
 // Init assistant
 const Assistant = require("./Assistant");
-const app = new Assistant(); 
+const app = new Assistant();
 const drivers = Init.initDrivers();
 const plugins = Init.initPlugins(drivers);
 forEach(plugins, app.addPlugin.bind(app));

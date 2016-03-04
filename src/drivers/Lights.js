@@ -1,6 +1,6 @@
 "use strict";
-var Q = require("q");
-var hue = require("hue.js");
+const Q = require("q");
+const hue = require("hue.js");
 
 class Lights {
   constructor(appName, addr) {
@@ -35,7 +35,7 @@ class Lights {
   }
 
   _huecall(method, name, args) {
-    for (var k in this._cacheLights) {
+    for (let k in this._cacheLights) {
       if (this._cacheLights.hasOwnProperty(k) && this._cacheLights[k].name == name) {
         return Q.npost(this._client, method, [k].concat(args));
       }
@@ -43,8 +43,8 @@ class Lights {
   }
 
   _huebroadcast(method, args) {
-    var promises = []
-    for (var k in this._cacheLights) {
+    let promises = []
+    for (let k in this._cacheLights) {
       if (this._cacheLights.hasOwnProperty(k)) {
         promises.push(Q.npost(this._client, method, [k].concat(args)))
       }
@@ -60,10 +60,10 @@ class Lights {
    **/
   getState() {
     return Q.ninvoke(this._client, "lights").then((result) => {
-      var ret = {};
+      let ret = {};
       this._cacheLights = result;
       //console.log(result);
-      for (var k in result) {
+      for (let k in result) {
         if (result.hasOwnProperty(k)) {
           ret[result[k].name] = {
             on: result[k].state.on

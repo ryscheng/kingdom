@@ -20,9 +20,9 @@ function initPlugins(drivers) {
   const Weather = require("./plugins/Weather");
   
   return {
-    lightControl: new LightControl(drivers.lights),
-    musicControl: new MusicControl(drivers.audioOut),
-    hypeMachine: new HypeMachine(drivers.audioOut, config.get("hypem.username")),
+    //lightControl: new LightControl(drivers.lights),
+    //musicControl: new MusicControl(drivers.audioOut),
+    //hypeMachine: new HypeMachine(drivers.audioOut, config.get("hypem.username")),
     weather: new Weather(),
   };
 }
