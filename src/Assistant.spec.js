@@ -1,6 +1,7 @@
+/*global describe, it, before, after, beforeEach, afterEach*/
 "use strict";
 
-const expect = require("chai").expect; 
+const expect = require("chai").expect;
 const Assistant = require("./Assistant");
 
 describe("Assistant", function() {

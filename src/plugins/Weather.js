@@ -14,9 +14,7 @@ class Weather {
         "name": "query",
         "description": "Get the current weather",
         "callback": this.getWeather.bind(this),
-        "parameters": [
-          { "name": "Location", "type": "US_CITY" },
-        ],
+        "parameters": [ { "name": "Location", "type": "US_CITY" }, ],
         "utterances": [
           "weather",
           "what is the weather",
@@ -37,6 +35,11 @@ class Weather {
         "Chicago"
       ],
     };
+    /**
+    this.triggers = {
+      "(what) (what's) (is) (the) weather (in) *searchQuery": this.getWeather.bind(this)
+    };
+     **/
   }
 
   getWeather(searchQuery) {

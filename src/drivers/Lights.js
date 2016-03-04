@@ -7,8 +7,8 @@ class Lights {
     this._appName = appName;
     this._addr = addr;
     this._client = hue.createClient({
-      stationIp: addr,
-      appName: appName
+      "stationIp": addr,
+      "appName": appName
     });
     this._cacheLights = {};
     this._init();
@@ -17,6 +17,8 @@ class Lights {
   _init() {
     // Try to get the list of lights. Register if necessary
     this._client.lights((err, lights) => {
+      this._cacheLights = lights;
+
       if (err && err.type === 1) {
         console.log("Please go and press the link button on your base station(s)");
         this._client.register((err) => {
@@ -36,7 +38,7 @@ class Lights {
 
   _huecall(method, name, args) {
     for (let k in this._cacheLights) {
-      if (this._cacheLights.hasOwnProperty(k) && this._cacheLights[k].name == name) {
+      if (this._cacheLights.hasOwnProperty(k) && this._cacheLights[k].name === name) {
         return Q.npost(this._client, method, [k].concat(args));
       }
     }
@@ -66,7 +68,7 @@ class Lights {
       for (let k in result) {
         if (result.hasOwnProperty(k)) {
           ret[result[k].name] = {
-            on: result[k].state.on
+            "on": result[k].state.on
           }
         }
       }

@@ -8,14 +8,14 @@ class MusicControl {
     // Public properties
     this.name = "Music Control";
     this.intents = {
-      play: {
-        description: "TODO",
-        help: "TODO",
-        callback: this.getWeather.bind(this),
-        parameters: [
-          { name: "Location", type: "US_CITY" },
+      "play": {
+        "name": "play",
+        "description": "Play music",
+        "callback": this.getWeather.bind(this),
+        "parameters": [
+          { "name": "Location", "type": "US_CITY" },
         ],
-        utterances: [
+        "utterances": [
           "weather",
           "what is the weather",
           "what's the weather",

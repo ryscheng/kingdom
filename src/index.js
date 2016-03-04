@@ -22,6 +22,6 @@ forEach(plugins, app.addPlugin.bind(app));
 const interfaces = Init.initInterfaces(drivers);
 forEach(interfaces, app.addInterface.bind(app));
 
-app.printTriggers();
+app.printIntents();
 interfaces.cli.startListening();
 //speakInterface.startListening();

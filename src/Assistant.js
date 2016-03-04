@@ -6,24 +6,32 @@ class Assistant {
     this._plugins = [];     // List of plugins
     this._interfaces = [];  // List of interfaces
     this._intents = [];     // Intent matchers
-    this._current = null;   // Current conversation/session
 
     this._initHelp();
   }
 
   _initHelp() {
-    const utt = "help {Intent}";
-    this._intents.push({
-      utterance: utt,
-      regex: this._commandToRegExp(utt),
-      plugin: { name: "General" },
-      intent: {
-        name: "help",
-        description: "Get help with commands",
-        callback: () => {},
-        parameters: [],
-        utterances: [],
+    this.addPlugin({
+      "name": "General",
+      "intents": {
+        "help" : {
+          "name": "help",
+          "description": "Get help with commands",
+          "callback": (pluginName) => {
+            console.log("General.help(" + pluginName + ")");
+            this._plugins.forEach((plugin) => {
+              if (plugin.name.toLowerCase() === pluginName) {
+                //@todo prettyprint
+                console.log(plugin);
+              }
+            })
+            return Promise.resolve("Woo");
+          },
+          "parameters": [ { "name": "Plugin", "type": "PLUGIN_NAME" } ],
+          "utterances": [ "help *Plugin" ],
+        }
       },
+      "types": { "PLUGIN_NAME": [] },
     });
   }
 
@@ -41,23 +49,15 @@ class Assistant {
     return new RegExp("^" + command + "$", "i");
   }
 
-  _onCommand(phrase) {
+  _onCommand(iface, phrase) {
     phrase = phrase.trim().toLowerCase();
 
-    if (this._current === null) {
-      this.launchIntent(phrase)
-
-    } else {
-
-    }
-
-    this.command(phrase).then(function(iface, response) {
+    this.launchIntent(phrase).then(function(iface, response) {
       this._interfaces.forEach((i) => {
         i.respond(response);
       });
       iface.startListening();
     }.bind(this, iface)).catch(function(iface, err) {
-      iface.respond("Error, " + err);
       console.error(err);
       iface.startListening();
     }.bind(this, iface));
@@ -69,7 +69,7 @@ class Assistant {
       if (result) {
         let parameters = result.slice(1);
         console.log("Matches " + this._intents[i].plugin.name + ":" + this._intents[i].utterance);
-        return this._triggers[i].callback.apply(this, parameters);
+        return this._intents[i].intent.callback.apply(this, parameters);
       }
     }
     return Promise.reject(new Error("Unrecognized command"));
@@ -80,27 +80,32 @@ class Assistant {
     this._plugins.push(plugin);
 
     // Add to _intents
-    Object.keys(plugin.intents).forEach(function(plugin, intent) {
+    Object.keys(plugin.intents).forEach(function(plugin, intentKey) {
+      const intent = plugin.intents[intentKey];
       intent.utterances.forEach(function(plugin, intent, utt) {
-        this._intents[utt] = {
-          utterance: utt,
-          regex: this._commandToRegExp(utt),
-          plugin: plugin,
-          intent: intent,
-        };
+        this._intents.push({
+          "utterance": utt,
+          "regex": this._commandToRegExp(utt),
+          "plugin": plugin,
+          "intent": intent,
+        });
       }.bind(this, plugin, intent));
     }.bind(this, plugin));
+
+    // The help plugin
+    this._plugins[0].types["PLUGIN_NAME"].push(plugin.name);
   }
 
   addInterface(iface) {
     this._interfaces.push(iface);
-    iface.on("command", this._onCommand.bind(this));
+    iface.on("command", this._onCommand.bind(this, iface));
   }
 
   printIntents() {
     console.log("Registered Intents:");
     this._plugins.forEach((plugin) => {
-      Object.keys(plugin.intents).forEach(function(plugin, intent) {
+      Object.keys(plugin.intents).forEach(function(plugin, intentKey) {
+        const intent = plugin.intents[intentKey];
         console.log("[" + plugin.name + "]:" + intent.name + ": " + intent.description);
       }.bind(this, plugin));
     });

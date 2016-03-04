@@ -3,7 +3,7 @@ const say = require("say");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 
-var DEFAULT_VOICE;
+let DEFAULT_VOICE;
 if (process.platform === "darwin") {
   DEFAULT_VOICE = "Alex";
 } else {

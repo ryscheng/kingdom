@@ -8,8 +8,8 @@ function initDrivers() {
   const AudioOut = require("./drivers/AudioOut");
 
   return {
-    lights: new Lights(config.get("app.name"), config.get("hue.addr")),
-    audioOut: new AudioOut(),
+    "lights": new Lights(config.get("app.name"), config.get("hue.addr")),
+    "audioOut": new AudioOut(),
   };
 }
 
@@ -20,10 +20,10 @@ function initPlugins(drivers) {
   const Weather = require("./plugins/Weather");
   
   return {
-    //lightControl: new LightControl(drivers.lights),
-    //musicControl: new MusicControl(drivers.audioOut),
-    //hypeMachine: new HypeMachine(drivers.audioOut, config.get("hypem.username")),
-    weather: new Weather(),
+    "lightControl": new LightControl(drivers.lights),
+    "musicControl": new MusicControl(drivers.audioOut),
+    "hypeMachine": new HypeMachine(drivers.audioOut, config.get("hypem.username")),
+    "weather": new Weather(),
   };
 }
 
@@ -32,8 +32,8 @@ function initInterfaces(drivers) {
   const SpeakInterface = require("./interfaces/SpeakInterface");
 
   return {
-    cli: new CLI(),
-    speakInterface: new SpeakInterface(drivers.audioOut),
+    "cli": new CLI(),
+    "speakInterface": new SpeakInterface(drivers.audioOut),
   };
 }
 

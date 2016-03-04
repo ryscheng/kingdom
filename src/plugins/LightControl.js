@@ -1,6 +1,5 @@
 "use strict";
 
-
 class LightControl {
   constructor(lights) {
     // Private
@@ -9,14 +8,14 @@ class LightControl {
     // Public properties
     this.name = "Light Control"
     this.intents = {
-      onoff: {
-        description: "TODO",
-        help: "TODO",
-        callback: this.lightsOnOff.bind(this),
-        parameters: [
-          { name: "Toggle", type: "OnOff" },
+      "onoff": {
+        "name": "onoff",
+        "description": "Turn all lights on or off",
+        "callback": this.lightsOnOff.bind(this),
+        "parameters": [
+          { "name": "Toggle", "type": "OnOff" },
         ],
-        utterances: [
+        "utterances": [
           "please turn the lights {Toggle}",
           "turn the lights {Toggle}",
           "turn lights {Toggle}",
