@@ -17,20 +17,32 @@ class Assistant {
         "help" : {
           "name": "help",
           "description": "Get help with commands",
-          "callback": (pluginName) => {
-            console.log("General.help(" + pluginName + ")");
-            this._plugins.forEach((plugin) => {
-              if (plugin.name.toLowerCase() === pluginName) {
-                console.log("[" + plugin.name + "]");
-                console.log("");
-                //@todo prettyprint
-                console.log(plugin);
-              }
-            })
+          "callback": (index) => {
+            if (index === null || typeof index === "undefined") {
+              this.printIntents();
+              return Promise.resolve("Done");
+            }
+
+            console.log("General.help(" + index + ")");
+            const plugin = this._intents[index].plugin;
+            const intent = this._intents[index].intent;
+            console.log("[" + plugin.name + "]" + ":" + intent.name);
+            console.log("Utterances:");
+            intent.utterances.forEach((utt) => {
+              console.log("- " + utt);
+            });
+            console.log("Parameters:");
+            intent.parameters.forEach((param) => {
+              console.log("*" + param.name + ":");
+              plugin.types[param.type].forEach((type) => {
+                console.log("- " + type);
+              });
+            });
+
             return Promise.resolve("Woo");
           },
           "parameters": [ { "name": "Plugin", "type": "PLUGIN_NAME" } ],
-          "utterances": [ "help *Plugin" ],
+          "utterances": [ "help", "help *Plugin" ],
         }
       },
       "types": { "PLUGIN_NAME": [] },
@@ -105,12 +117,16 @@ class Assistant {
 
   printIntents() {
     console.log("Registered Intents:");
-    this._plugins.forEach((plugin1) => {
-      Object.keys(plugin1.intents).forEach(function(plugin2, intentKey) {
-        const intent = plugin2.intents[intentKey];
-        console.log("[" + plugin2.name + "]:" + intent.name + ": " + intent.description);
-      }.bind(this, plugin1));
-    });
+    let current, last = null;
+    for (let i = 0; i < this._intents.length; i++) {
+      current = this._intents[i];
+      if (last === null || 
+          current.plugin.name !== last.plugin.name ||
+          current.intent.name !== last.intent.name) {
+        console.log(i + ". " + "[" + current.plugin.name + "]:" + current.intent.name + ": " + current.intent.description);
+      }
+      last = current;
+    }
     return Promise.resolve("Done");
   }
 

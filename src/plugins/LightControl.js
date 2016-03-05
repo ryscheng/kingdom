@@ -13,7 +13,7 @@ class LightControl {
         "description": "Turn all lights on or off",
         "callback": this.lightsOnOff.bind(this),
         "parameters": [
-          { "name": "Toggle", "type": "OnOff" },
+          { "name": "Toggle", "type": "ONOFF" },
         ],
         "utterances": [
           "please turn the lights *Toggle",
