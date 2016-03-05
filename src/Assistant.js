@@ -21,6 +21,8 @@ class Assistant {
             console.log("General.help(" + pluginName + ")");
             this._plugins.forEach((plugin) => {
               if (plugin.name.toLowerCase() === pluginName) {
+                console.log("[" + plugin.name + "]");
+                console.log("");
                 //@todo prettyprint
                 console.log(plugin);
               }
@@ -52,14 +54,14 @@ class Assistant {
   _onCommand(iface, phrase) {
     phrase = phrase.trim().toLowerCase();
 
-    this.launchIntent(phrase).then(function(iface, response) {
+    this.launchIntent(phrase).then(function(iface1, response) {
       this._interfaces.forEach((i) => {
         i.respond(response);
       });
-      iface.startListening();
-    }.bind(this, iface)).catch(function(iface, err) {
+      iface1.startListening();
+    }.bind(this, iface)).catch(function(iface2, err) {
       console.error(err);
-      iface.startListening();
+      iface2.startListening();
     }.bind(this, iface));
   }
 
@@ -80,16 +82,16 @@ class Assistant {
     this._plugins.push(plugin);
 
     // Add to _intents
-    Object.keys(plugin.intents).forEach(function(plugin, intentKey) {
-      const intent = plugin.intents[intentKey];
-      intent.utterances.forEach(function(plugin, intent, utt) {
+    Object.keys(plugin.intents).forEach(function(plugin1, intentKey) {
+      const intent = plugin1.intents[intentKey];
+      intent.utterances.forEach(function(plugin2, intent2, utt) {
         this._intents.push({
           "utterance": utt,
           "regex": this._commandToRegExp(utt),
-          "plugin": plugin,
-          "intent": intent,
+          "plugin": plugin2,
+          "intent": intent2,
         });
-      }.bind(this, plugin, intent));
+      }.bind(this, plugin1, intent));
     }.bind(this, plugin));
 
     // The help plugin
@@ -103,11 +105,11 @@ class Assistant {
 
   printIntents() {
     console.log("Registered Intents:");
-    this._plugins.forEach((plugin) => {
-      Object.keys(plugin.intents).forEach(function(plugin, intentKey) {
-        const intent = plugin.intents[intentKey];
-        console.log("[" + plugin.name + "]:" + intent.name + ": " + intent.description);
-      }.bind(this, plugin));
+    this._plugins.forEach((plugin1) => {
+      Object.keys(plugin1.intents).forEach(function(plugin2, intentKey) {
+        const intent = plugin2.intents[intentKey];
+        console.log("[" + plugin2.name + "]:" + intent.name + ": " + intent.description);
+      }.bind(this, plugin1));
     });
     return Promise.resolve("Done");
   }

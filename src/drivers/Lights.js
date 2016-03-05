@@ -16,20 +16,20 @@ class Lights {
 
   _init() {
     // Try to get the list of lights. Register if necessary
-    this._client.lights((err, lights) => {
+    this._client.lights((err1, lights) => {
       this._cacheLights = lights;
 
-      if (err && err.type === 1) {
+      if (err1 && err1.type === 1) {
         console.log("Please go and press the link button on your base station(s)");
-        this._client.register((err) => {
-          if (err) {
-            console.error("Error registering with Hue bridge:", err);
+        this._client.register((err2) => {
+          if (err2) {
+            console.error("Error registering with Hue bridge:", err2);
             return
           }
           console.log("Registered")
         });
-      } else if (err) {
-        console.error("Hue error: ", err)
+      } else if (err1) {
+        console.error("Hue error: ", err1)
       } else {
         // Already registered, no errors
       }

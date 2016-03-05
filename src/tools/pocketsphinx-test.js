@@ -8,7 +8,8 @@ const mic = require("mic");
 const modeldir = "/usr/local/share/pocketsphinx/model/en-us";
 
 // Configure pocketsphinx
-let psConfig = new PocketSphinx.Decoder.defaultConfig();
+PocketSphinx.Decoder.DefaultConfig = PocketSphinx.Decoder.defaultConfig;
+let psConfig = new PocketSphinx.Decoder.DefaultConfig();
 psConfig.setString("-hmm", path.join(modeldir, "en-us"));
 psConfig.setString("-dict", path.join(modeldir, "cmudict-en-us.dict"));
 psConfig.setString("-lm", path.join(modeldir, "en-us.lm.bin"));
