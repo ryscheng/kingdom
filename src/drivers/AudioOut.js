@@ -25,10 +25,10 @@ class AudioOut {
   }
 
   say(phrase) {
-    return new Promise(function(phrase, resolve, reject) {
-      say.speak(this._voiceName, phrase, function(resolve, reject) {
-        resolve();
-      }.bind(this, resolve, reject));
+    return new Promise(function(phrase1, resolve) {
+      say.speak(this._voiceName, phrase1, function(resolve2) {
+        resolve2();
+      }.bind(this, resolve));
     }.bind(this, phrase));
   }
 

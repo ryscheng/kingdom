@@ -8,37 +8,68 @@ class MusicControl {
     // Public properties
     this.name = "Music Control";
     this.intents = {
-      "play": {
-        "name": "play",
-        "description": "Play music",
-        "callback": this.getWeather.bind(this),
+      "control": {
+        "name": "control",
+        "description": "Control music playback",
+        "callback": this.control.bind(this),
         "parameters": [
-          { "name": "Location", "type": "US_CITY" },
+          { "name": "Command", "type": "MUSIC_COMMANDS" },
         ],
         "utterances": [
-          "weather",
-          "what is the weather",
-          "what's the weather",
-          "weather in {Location}",
-          "what is the weather in {Location}",
-          "what's the weather in {Location}",
+          "*Command music",
+          "*Command song",
         ],
-      }
+      },
+      "clear": {
+        "name": "clear",
+        "description": "Clear playlist",
+        "callback": this.clear.bind(this),
+        "parameters": [],
+        "utterances": [
+          "clear playlist",
+        ],
+      },
+      "query": {
+        "name": "query",
+        "description": "Ask about next song",
+        "callback": this.nextSong.bind(this),
+        "parameters": [],
+        "utterances": [
+          "what is the next song",
+        ],
+      },
     };
-    this.types = {};
+    this.types = {
+      "MUSIC_COMMANDS": [
+        "play",
+        "stop",
+        "pause",
+        "resume",
+        "next",
+        "previous",
+        "repeat",
+      ],
+    };
     /**
     this.triggers = {
       "play music": this.play.bind(this),
       "stop music": this.stop.bind(this),
       "pause music": this.pause.bind(this),
-      "resume music": this.resume .bind(this),
-      "clear music (playlist)": this.clear.bind(this),
+      "resume music": this.resume.bind(this),
       "next song": this.next.bind(this),
       "previous song": this.previous.bind(this),
-      "play song again": this.again.bind(this),
+      "play song again": this.repeat.bind(this),
+      "clear music (playlist)": this.clear.bind(this),
       "what is the next song": this.nextSong.bind(this),
     };
     **/
+  }
+
+  control(cmd) {
+    if (this.types.MUSIC_COMMANDS.indexOf(cmd) < 0) {
+      return Promise.resolve(cmd + " is not a valid music command");
+    }
+    return this[cmd]();
   }
 
   play() {
@@ -96,7 +127,7 @@ class MusicControl {
     return Promise.resolve("Done");
   }
   
-  again() {
+  repeat() {
     console.log("MusicControl.again()");
     this._audioOut.stop();
     this._audioOut.play();

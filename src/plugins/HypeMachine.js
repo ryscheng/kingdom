@@ -66,7 +66,7 @@ class HypeMachine {
       this._cachedResult = [];
       for (let i = 0; i < result.length; i++) {
         if (result[i] !== null && typeof result[i] === "object" && result[i].hasOwnProperty("tracks")) {
-          const tracks = tracks;
+          const tracks = result[i].tracks;
           for (let j = 0; j < tracks.length; j++) {
             const current = tracks[j]
             this._cachedResult.push({

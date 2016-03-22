@@ -13,13 +13,13 @@ class LightControl {
         "description": "Turn all lights on or off",
         "callback": this.lightsOnOff.bind(this),
         "parameters": [
-          { "name": "Toggle", "type": "OnOff" },
+          { "name": "Toggle", "type": "ONOFF" },
         ],
         "utterances": [
-          "please turn the lights {Toggle}",
-          "turn the lights {Toggle}",
-          "turn lights {Toggle}",
-          "lights {Toggle}",
+          "please turn the lights *Toggle",
+          "turn the lights *Toggle",
+          "turn lights *Toggle",
+          "lights *Toggle",
         ],
       }
     };
@@ -51,19 +51,18 @@ class LightControl {
       return true;
     };
 
-    return this._lights.getState().then(function(onoff, lightState) {
+    return this._lights.getState().then(function(onoff1, lightState) {
       //@todo test
-      if (onoff === "off" && isAllOff(lightState) === true) {
+      if (onoff1 === "off" && isAllOff(lightState) === true) {
         return Promise.resolve("Lights are already off");
-      } else if (onoff === "on" && isAllOff(lightState) === false) {
+      } else if (onoff1 === "on" && isAllOff(lightState) === false) {
         return Promise.resolve("Lights are already on");
-      } else if (onoff === "on") {
+      } else if (onoff1 === "on") {
         return this._lights.allOn();
-      } else if (onoff === "off") {
+      } else if (onoff1 === "off") {
         return this._lights.allOff();
-      } else {
-        return Promise.resolve("Something went wrong");
       }
+      return Promise.resolve("Something went wrong");
     }.bind(this, onoff)).then((result) => {
       if (typeof result !== "string") {
         result = "Consider it done";
