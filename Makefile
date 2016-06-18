@@ -14,6 +14,6 @@ cleanup:
 	#docker rm $(docker ps -a -q)
 
 run:
-	docker run --device /dev/snd -i -t ryscheng/kingdom node src/index.js
+	docker run -e "NODE_ENV=dev" --device /dev/snd -i -t ryscheng/kingdom node src/index.js
 
 all: docker run

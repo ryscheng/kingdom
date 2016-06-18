@@ -1,4 +1,4 @@
-FROM ubuntu:15.10
+FROM ubuntu:16.04
 MAINTAINER ryscheng
 
 #EXPOSE 53/udp
@@ -8,10 +8,12 @@ RUN apt-get update
 RUN apt-get install -y software-properties-common git curl wget
 
 # For newest golang and node.js
-RUN add-apt-repository -y ppa:ethereum/ethereum
-RUN add-apt-repository -y ppa:ethereum/ethereum-dev
-RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+# RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
 RUN apt-get install -y golang nodejs
+# Ubuntu doesn't package npm with nodejs
+RUN apt-get install -y npm
+# Ubuntu sets the default command to "nodejs"
+RUN ln -s `which nodejs` /usr/bin/node
 
 # mic (npm)
 RUN apt-get install -y alsa-base alsa-utils
@@ -37,18 +39,19 @@ RUN apt-get install -y festival festvox-kallpc16k
 # pocketsphinx dependencies
 RUN apt-get install -y cmake gcc g++ automake autoconf libtool pkg-config
 RUN apt-get install -y bison python python-all-dev libpcre3-dev
-#RUN apt-get install -y swig3.0
 RUN npm install -g cmake-js
-#RUN ln -s /usr/bin/swig3.0 /usr/bin/swig
 
 # swig (Node's pocketsphinx requires swig >=3.0.7)
-WORKDIR /kingdom/third_party
-RUN wget https://downloads.sourceforge.net/project/swig/swig/swig-3.0.8/swig-3.0.8.tar.gz
-RUN tar xzf swig-3.0.8.tar.gz
-WORKDIR /kingdom/third_party/swig-3.0.8
-RUN ./configure
-RUN make
-RUN make install
+RUN apt-get install -y swig
+#RUN apt-get install -y swig3.0
+#RUN ln -s /usr/bin/swig3.0 /usr/bin/swig
+#WORKDIR /kingdom/third_party
+#RUN wget https://downloads.sourceforge.net/project/swig/swig/swig-3.0.10/swig-3.0.10.tar.gz
+#RUN tar xzf swig-3.0.10.tar.gz
+#WORKDIR /kingdom/third_party/swig-3.0.10
+#RUN ./configure
+#RUN make
+#RUN make install
 
 # pocketsphinx
 RUN mkdir -p /kingdom/third_party
