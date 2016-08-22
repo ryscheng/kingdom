@@ -66,6 +66,7 @@ class Assistant {
   _onCommand(iface, phrase) {
     phrase = phrase.trim().toLowerCase();
 
+    //@todo replace with conversations
     this.launchIntent(phrase).then(function(iface1, response) {
       this._interfaces.forEach((i) => {
         i.respond(response);
@@ -113,6 +114,7 @@ class Assistant {
   addInterface(iface) {
     this._interfaces.push(iface);
     iface.on("command", this._onCommand.bind(this, iface));
+    iface.startListening();
   }
 
   printIntents() {

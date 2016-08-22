@@ -29,10 +29,12 @@ function initPlugins(drivers) {
 
 function initInterfaces(drivers) {
   const CLI = require("./interfaces/CLI");
+  const Gmail = require("./interfaces/Gmail")
   const SpeakInterface = require("./interfaces/SpeakInterface");
 
   return {
     "cli": new CLI(),
+    "gmail": new Gmail(config.get("google.auth.clientId"), config.get("google.auth.clientSecret"), config.get("google.auth.authCode"), config.get("google.gmail.authorizedUsers"), config.get("google.gmail.topic")),
     "speakInterface": new SpeakInterface(drivers.audioOut),
   };
 }

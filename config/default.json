@@ -7,5 +7,16 @@
   },
   "hypem": {
     "username": ""
+  },
+  "google": {
+    "auth": {
+      "clientId": "",
+      "clientSecret": "",
+      "authCode": ""
+    },
+    "gmail": {
+      "authorizedUsers": [],
+      "topic": ""
+    }
   }
 }

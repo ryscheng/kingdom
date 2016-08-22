@@ -26,7 +26,7 @@ class AudioOut {
 
   say(phrase) {
     return new Promise(function(phrase1, resolve) {
-      say.speak(this._voiceName, phrase1, function(resolve2) {
+      say.speak(phrase1, this._voiceName, 1.0, function(resolve2) {
         resolve2();
       }.bind(this, resolve));
     }.bind(this, phrase));
