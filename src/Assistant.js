@@ -122,7 +122,7 @@ class Assistant {
     let current, last = null;
     for (let i = 0; i < this._intents.length; i++) {
       current = this._intents[i];
-      if (last === null || 
+      if (last === null ||
           current.plugin.name !== last.plugin.name ||
           current.intent.name !== last.intent.name) {
         console.log(i + ". " + "[" + current.plugin.name + "]:" + current.intent.name + ": " + current.intent.description);

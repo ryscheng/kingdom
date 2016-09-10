@@ -3,9 +3,9 @@
 const EventEmitter = require("events");
 const fs = require("fs");
 const Q = require("q");
-const googleAuth = require("google-auth-library");
+const GoogleAuth = require("google-auth-library");
 const google = require("googleapis");
-const gcloud = require("google-cloud");
+//const gcloud = require("google-cloud");
 
 const SCOPES = [
   //"https://www.googleapis.com/auth/gmail.readonly",
@@ -14,9 +14,9 @@ const SCOPES = [
 ];
 const REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
-var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-                process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'kingdom-google.json';
+const TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
+                process.env.USERPROFILE) + "/.credentials/";
+const TOKEN_PATH = TOKEN_DIR + "kingdom-google.json";
 
 class Gmail extends EventEmitter {
   constructor(clientId, clientSecret, authCode, authorizedUsers, pubsubTopic) {
@@ -27,9 +27,9 @@ class Gmail extends EventEmitter {
     this._authorizedUsers = authorizedUsers;
     this._pubsubTopic = pubsubTopic;
     this._token = null;
-    this._gmail = google.gmail('v1');
+    this._gmail = google.gmail("v1");
 
-    var auth = new googleAuth();
+    let auth = new GoogleAuth();
     this._oauth2Client = new auth.OAuth2(this._clientId, this._clientSecret, REDIRECT_URI);
     //this._oauth2Client.credentials = JSON.parse(token);
     this._init()
@@ -44,9 +44,9 @@ class Gmail extends EventEmitter {
       return Q.npost(this._oauth2Client, "getToken", [ this._authCode ]);
     }).catch((err) => {
       //console.log('Invalid Gmail auth code', err);
-      var authUrl = this._oauth2Client.generateAuthUrl({
-        access_type: "offline",
-        scope: SCOPES
+      let authUrl = this._oauth2Client.generateAuthUrl({
+        "access_type": "offline",
+        "scope": SCOPES
       });
       console.log("Log in to this app's Gmail by visiting this url: ", authUrl);
       console.log("When done, insert the code into the configuration file and restart");
@@ -66,11 +66,11 @@ class Gmail extends EventEmitter {
     }).then(() => {
       //console.log('Token stored to ' + TOKEN_PATH);
       return Q.nfapply(this._gmail.users.watch, [{
-        auth: this._oauth2Client,
-        userId: "me",
-        resource: {
-          labelIds: [ "INBOX" ],
-          topicName: this._pubsubTopic
+        "auth": this._oauth2Client,
+        "userId": "me",
+        "resource": {
+          "labelIds": [ "INBOX" ],
+          "topicName": this._pubsubTopic
         }
       }]);
     }).then((resp) => {
@@ -84,7 +84,7 @@ class Gmail extends EventEmitter {
     try {
       fs.mkdirSync(TOKEN_DIR);
     } catch (err) {
-      if (err.code != 'EEXIST') {
+      if (err.code !== "EEXIST") {
         throw err;
       }
     }
@@ -104,13 +104,13 @@ class Gmail extends EventEmitter {
     }
 
     return Q.nfapply(this._gmail.users.messages.list, [{
-      auth: this._oauth2Client,
-      userId: "me"
+      "auth": this._oauth2Client,
+      "userId": "me"
     }]).then((resp) => {
       resp = this._extractFirst(resp);
       if (resp.hasOwnProperty("messages") && Array.isArray(resp.messages)) {
-        var messages = resp.messages;
-        for (var i = 0; i < messages.length; i++) {
+        let messages = resp.messages;
+        for (let i = 0; i < messages.length; i++) {
           this._processMessage(messages[i].id);
         }
       }
@@ -122,14 +122,14 @@ class Gmail extends EventEmitter {
 
   _processMessage(id) {
     Q.nfapply(this._gmail.users.messages.get, [{
-      auth: this._oauth2Client,
-      userId: "me",
-      id: id,
-    }]).then(function (id, msg) {
-      var headers = this._extractFirst(msg).payload.headers;
-      var authorized = false;
-      var command = null;
-      for (var i = 0; i < headers.length; i++) {
+      "auth": this._oauth2Client,
+      "userId": "me",
+      "id": id,
+    }]).then(function(id, msg) {
+      let headers = this._extractFirst(msg).payload.headers;
+      let authorized = false;
+      let command = null;
+      for (let i = 0; i < headers.length; i++) {
         if (headers[i].name === "From" && this._authorizedUsers.includes(headers[i].value)) {
           authorized = true;
         }
@@ -141,9 +141,9 @@ class Gmail extends EventEmitter {
         this.emit("command", command);
       }
       return Q.nfapply(this._gmail.users.messages.trash, [{
-        auth: this._oauth2Client,
-        userId: "me",
-        id: id,
+        "auth": this._oauth2Client,
+        "userId": "me",
+        "id": id,
       }]);
     }.bind(this, id)).then((resp) => {
       //console.log("Trash succeeded");
