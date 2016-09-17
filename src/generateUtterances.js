@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 "use strict";
 
 const Init = require("./Initialize");
@@ -24,3 +25,11 @@ console.log("---RESULT---");
 console.log(resultStr);
 
 // Write result to file
+if (process.argv.length < 3) {
+  console.log("[USAGE] node generateUtterances.js OUTPUTFILE");
+  return;
+}
+
+const filename = process.argv[2];
+console.log("Writing result to " + filename);
+fs.writeFile(filename, resultStr);
