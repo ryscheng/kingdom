@@ -14,7 +14,7 @@ class Weather {
         "name": "query",
         "description": "Get the current weather",
         "callback": this.getWeather.bind(this),
-        "parameters": [ { "name": "Location", "type": "US_CITY" }, ],
+        "parameters": [ { "name": "Location", "type": "CITY" }, ],
         "utterances": [
           "weather",
           "what is the weather",
@@ -26,13 +26,15 @@ class Weather {
       }
     };
     this.types = {
-      "US_CITY": [
+      "CITY": [
         "Seattle",
         "New York",
         "Los Angeles",
         "San Francisco",
         "Boston",
-        "Chicago"
+        "Chicago",
+        "Hong Kong",
+        "London",
       ],
     };
     /**

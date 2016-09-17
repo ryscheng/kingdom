@@ -5,22 +5,14 @@ const Init = require("./Initialize");
 // Necessary for hype.js
 global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-function forEach(obj, cb) {
-  for (let k in obj) {
-    if (obj.hasOwnProperty(k)) {
-      cb(obj[k]);
-    }
-  }
-}
-
 // Init assistant
 const Assistant = require("./Assistant");
 const app = new Assistant();
 const drivers = Init.initDrivers();
 const plugins = Init.initPlugins(drivers);
-forEach(plugins, app.addPlugin.bind(app));
+Object.keys(plugins).forEach((k) => { app.addPlugin(plugins[k]); });
 const interfaces = Init.initInterfaces(drivers);
-forEach(interfaces, app.addInterface.bind(app));
+Object.keys(interfaces).forEach((k) => { app.addInterface(interfaces[k]); });
 
 app.printIntents();
 interfaces.cli.startListening();
