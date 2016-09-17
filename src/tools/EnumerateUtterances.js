@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * 
+ *
  **/
 function processPlugin(plugin) {
   let result = [];
@@ -53,13 +53,13 @@ function arrayToString(array) {
     return "";
   } else if (array.length === 1) {
     return array[0];
-  } else {
-    let result = array[0];
-    for (let i = 1; i < array.length; i++) {
-      result = result + " " + array[i];
-    }
-    return result;
   }
+
+  let result = array[0];
+  for (let i = 1; i < array.length; i++) {
+    result = result + " " + array[i];
+  }
+  return result;
 }
 
 module.exports.processPlugin = processPlugin;
