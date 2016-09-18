@@ -13,9 +13,13 @@
  **/
 function processPlugin(plugin) {
   let result = [];
+  if (!plugin.hasOwnProperty("intents")) {
+    return result;
+  }
+
   // For each intent in plugin
   for (let k in plugin.intents) {
-    if (plugin.intents.hasOwnProperty(k)) {
+    if (plugin.intents.hasOwnProperty(k) && Array.isArray(plugin.intents[k].utterances)) {
       let intent = plugin.intents[k];
       // For each utterance in plugin
       for (let i = 0; i < intent.utterances.length; i++) {

@@ -92,5 +92,40 @@ describe("EnumerateUtterances", function() {
       expect(result).to.be.empty;
     });
   });
+
+  describe("#processUtterance", function() {
+    it("processes a complex utterance", function() {
+      const parameters = plugin.intents["intent1"].parameters;
+      const types = plugin.types;
+      let result = EnumerateUtterances.processUtterance("I'll have the *appetizer with a *beverage at the *location", parameters, types);
+      expect(result).to.be.instanceof(Array);
+      expect(result).to.have.lengthOf(18);
+      expect(result).to.include("I'll have the noodle with a milk at the home");
+    });
+  });
+
+  describe("#processPlugin", function() {
+    it("processes a complex plugin", function() {
+      const result = EnumerateUtterances.processPlugin(plugin);
+      expect(result).to.have.lengthOf(50);
+      expect(result).to.include("I need a juice");
+      expect(result).to.include("I'll have the noodle with a milk at the home");
+      expect(result).to.include("I don't know what I want");
+      expect(result).to.include("I'll have the rice and a rice an a rice");
+      expect(result).to.include("I'll have the fruit and a noodle an a rice");
+    });
+
+    it("processes an empty plugin", function() {
+      let result = EnumerateUtterances.processPlugin({});
+      expect(result).to.be.instanceof(Array);
+      expect(result).to.be.empty;
+      result = EnumerateUtterances.processPlugin({ "intents": 1 });
+      expect(result).to.be.instanceof(Array);
+      expect(result).to.be.empty;
+      result = EnumerateUtterances.processPlugin({ "intents": { "utterances": 1 }});
+      expect(result).to.be.instanceof(Array);
+      expect(result).to.be.empty;
+    });
+  });
 });
 
