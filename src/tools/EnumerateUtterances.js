@@ -8,7 +8,7 @@
 /**
  * Enumerates all of the utterances of a plugin
  *   This is the main function of the module
- * @param {Plugin} plugin
+ * @param {Plugin} plugin - plugin
  * @return {Array.<string>} array of utterances
  **/
 function processPlugin(plugin) {
