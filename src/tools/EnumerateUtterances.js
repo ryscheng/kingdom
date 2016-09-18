@@ -1,6 +1,6 @@
 "use strict";
 
-/** 
+/**
  * Module for enumerating all possible utterances of a Kingdom plugin
  * @module
  **/
@@ -30,7 +30,7 @@ function processPlugin(plugin) {
 /**
  * Enumerates the possible literal utterances from a single expression.
  *  e.g. "turn the lights *Toggle" => ["turn the lights on", "turn the lights off"]
- * @param {string} utterance - Utterance expression 
+ * @param {string} utterance - Utterance expression
  * @param {Array.<PluginParameter>} parameters - from PluginIntent.parameters
  * @param {Object.<string, Array.<String>>} types - from Plugin.types
  * @return {Array.<string>} array of utterances
@@ -67,9 +67,13 @@ function processUtterance(utterance, parameters, types) {
 function enumerateParameter(paramName, parameters, types) {
   for (let i = 0; i < parameters.length; i++) {
     if (parameters[i].name === paramName) {
-      return types[parameters[i].type];
+      const typeName = parameters[i].type;
+      if (types.hasOwnProperty(typeName)) {
+        return types[typeName];
+      }
     }
   }
+  return [];
 }
 
 /**
@@ -78,7 +82,9 @@ function enumerateParameter(paramName, parameters, types) {
  * @return {string}
  **/
 function arrayToString(array) {
-  if (array.length < 1) {
+  if (!Array.isArray(array)) {
+    return "";
+  } else if (array.length < 1) {
     return "";
   } else if (array.length === 1) {
     return array[0];
