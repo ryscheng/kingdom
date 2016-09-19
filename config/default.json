@@ -8,6 +8,12 @@
   "hypem": {
     "username": ""
   },
+  "pocketsphinx": {
+    "bin": "",
+    "hmm": "",
+    "lm": "",
+    "dict": ""
+  },
   "google": {
     "auth": {
       "clientId": "",

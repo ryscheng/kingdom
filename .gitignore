@@ -6,6 +6,7 @@ npm-debug.log
 build/
 dist/
 config/
+models/
 
 ### NODE
 node_modules/

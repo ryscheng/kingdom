@@ -33,3 +33,6 @@ if (process.argv.length < 3) {
 const filename = process.argv[2];
 console.log("Writing result to " + filename);
 fs.writeFile(filename, resultStr);
+
+console.log("To generate a language model, upload this file to:");
+console.log("http://www.speech.cs.cmu.edu/tools/lmtool-new.html");
