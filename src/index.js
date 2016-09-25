@@ -19,5 +19,3 @@ Object.keys(interfaces).forEach((k) => {
 });
 
 app.printIntents();
-interfaces.cli.startListening();
-//speakInterface.startListening();

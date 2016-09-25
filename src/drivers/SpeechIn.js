@@ -68,7 +68,6 @@ class SpeechIn extends EventEmitter {
       // Ignore empty commands
       if (command.line !== "") {
         this.emit("command", command);
-        console.log(command);
       }
       this._count.emitted++;
     }
