@@ -6,10 +6,12 @@ function initDrivers() {
   /////// http://192.168.0.13/debug/clip.html
   const Lights = require("./drivers/Lights");
   const AudioOut = require("./drivers/AudioOut");
+  const SpeechIn = require("./drivers/SpeechIn");
 
   return {
     "lights": new Lights(config.get("app.name"), config.get("hue.addr")),
     "audioOut": new AudioOut(),
+    "speechIn": new SpeechIn(config.get("pocketsphinx")),
   };
 }
 
@@ -34,8 +36,8 @@ function initInterfaces(drivers) {
 
   return {
     "cli": new CLI(),
-    "gmail": new Gmail(config.get("google.auth.clientId"), config.get("google.auth.clientSecret"), config.get("google.auth.authCode"), config.get("google.gmail.authorizedUsers"), config.get("google.gmail.topic")),
-    "speakInterface": new SpeakInterface(drivers.audioOut),
+    //"gmail": new Gmail(config.get("google.auth.clientId"), config.get("google.auth.clientSecret"), config.get("google.auth.authCode"), config.get("google.gmail.authorizedUsers"), config.get("google.gmail.topic")),
+    "speakInterface": new SpeakInterface(drivers.speechIn, drivers.audioOut),
   };
 }
 

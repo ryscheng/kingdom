@@ -3,9 +3,10 @@
 const EventEmitter = require("events");
 
 class SpeakInterface extends EventEmitter {
-  constructor(voice) {
+  constructor(speechIn, audioOut) {
     super();
-    this._voice = voice;
+    this._speechIn = speechIn
+    this._audioOut = audioOut;
   }
 
   startListening() {
@@ -13,7 +14,7 @@ class SpeakInterface extends EventEmitter {
   }
 
   respond(response) {
-    return this._voice.say(response);
+    return this._audioOut.say(response);
   }
 }
 
