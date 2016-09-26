@@ -12,7 +12,7 @@ class SpeakInterface extends EventEmitter {
 
   _onCommand(command) {
     console.log(command);
-    if (command.score > -4000) {
+    if (command.score > -6000) {
       this.emit("command", command.line);
       console.log("... emitted");
     }

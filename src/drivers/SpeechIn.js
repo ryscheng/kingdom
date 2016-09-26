@@ -7,15 +7,7 @@ const SCORE_SELECTOR = "Bestpath score:";
 class SpeechIn extends EventEmitter {
   constructor(pocketsphinxOpts) {
     super();
-    this._count = {
-      emitted: 0,
-      line: 0,
-      score: 0,
-    }
-    this._last = {
-      line: "",
-      score: 0,
-    }
+    this._lastScore = 0;
 
     // this.emit(event, data);
     this._process = ChildProcess.spawn(pocketsphinxOpts.bin, [
@@ -41,9 +33,15 @@ class SpeechIn extends EventEmitter {
     // Remove subsequent lines
     data = data.substring(0, data.indexOf("\n"))
     data = data.trim();
-    this._last.line = data;
-    this._count.line++;
-    this._checkEmit();
+   
+    // Ignore empty commands
+    if (data != "") {
+      const command = {
+        line: data,
+        score: this._lastScore,
+      }
+      this.emit("command", command);
+    }
   }
 
   _onStderr(data) {
@@ -55,21 +53,7 @@ class SpeechIn extends EventEmitter {
       let score = data.substring(index);
       score = score.substring(0, data.indexOf("\n"))
       score = parseInt(score);
-      this._last.score = score;
-      this._count.score++;
-      this._checkEmit();
-    }
-  }
-
-  _checkEmit() {
-    if (this._count.emitted < this._count.line &&
-       this._count.line === this._count.score) {
-      const command = JSON.parse(JSON.stringify(this._last))
-      // Ignore empty commands
-      if (command.line !== "") {
-        this.emit("command", command);
-      }
-      this._count.emitted++;
+      this._lastScore = score;
     }
   }
 
