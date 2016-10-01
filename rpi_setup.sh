@@ -31,6 +31,9 @@ sudo apt-get install -y espeak
 # say (npm)
 sudo apt-get install -y festival festvox-kallpc16k
 
+# opencv (npm)
+sudo apt-get install -y opencv
+
 # audio players
 #sudo apt-get install -y mplayer mpg321 ffmpeg
 
