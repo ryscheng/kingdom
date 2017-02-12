@@ -7,13 +7,13 @@ MAINTAINER ryscheng
 RUN apt-get update
 RUN apt-get install -y software-properties-common git curl wget
 
-# For newest golang and node.js
-# RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
-RUN apt-get install -y golang nodejs
+# For newest node.js
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get install -y nodejs
 # Ubuntu doesn't package npm with nodejs
-RUN apt-get install -y npm
+#RUN apt-get install -y npm
 # Ubuntu sets the default command to "nodejs"
-RUN ln -s `which nodejs` /usr/bin/node
+#RUN ln -s `which nodejs` /usr/bin/node
 
 # mic (npm)
 RUN apt-get install -y alsa-base alsa-utils
@@ -21,7 +21,7 @@ RUN apt-get install -y alsa-base alsa-utils
 # speaker (npm)
 RUN apt-get install -y libasound2-dev
 
-# lame (npm)
+# lame (npm) - comes bundled now
 RUN apt-get install -y libmp3lame-dev libmpg123-dev
 
 # espeak (npm)
@@ -30,13 +30,13 @@ RUN apt-get install -y espeak
 # say (npm)
 RUN apt-get install -y festival festvox-kallpc16k
 
+# opencv (npm)
+RUN apt-get install -y libopencv-dev
+
 # audio players
 #RUN apt-get install -y mplayer mpg321 ffmpeg
 
-# pulse
-#RUN apt-get install -y pulseaudio libpulse-dev
-
-# pocketsphinx dependencies
+# pocketsphinx (npm)
 RUN apt-get install -y cmake gcc g++ automake autoconf libtool pkg-config
 RUN apt-get install -y bison python python-all-dev libpcre3-dev
 RUN npm install -g cmake-js
@@ -54,23 +54,23 @@ RUN apt-get install -y swig
 #RUN make install
 
 # pocketsphinx
-RUN mkdir -p /kingdom/third_party
-WORKDIR /kingdom/third_party
-RUN git clone https://github.com/cmusphinx/sphinxbase.git
-RUN git clone https://github.com/cmusphinx/pocketsphinx.git
-WORKDIR /kingdom/third_party/sphinxbase
-RUN sh autogen.sh
-RUN ./configure
-RUN make
-RUN make install
-WORKDIR /kingdom/third_party/pocketsphinx
-RUN sh autogen.sh
-RUN ./configure
-RUN make
-RUN make install
-
+RUN apt-get install -y pocketsphinx
+#RUN mkdir -p /kingdom/third_party
+#WORKDIR /kingdom/third_party
+#RUN git clone https://github.com/cmusphinx/sphinxbase.git
+#RUN git clone https://github.com/cmusphinx/pocketsphinx.git
+#WORKDIR /kingdom/third_party/sphinxbase
+#RUN sh autogen.sh
+#RUN ./configure
+#RUN make
+#RUN make install
+#WORKDIR /kingdom/third_party/pocketsphinx
+#RUN sh autogen.sh
+#RUN ./configure
+#RUN make
+#RUN make install
 # to locate libpocketsphinx.so
-RUN ldconfig
+#RUN ldconfig
 
 # pocketsphinx models
 #RUN mkdir -p /kingdom/models

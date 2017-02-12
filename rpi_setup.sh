@@ -12,7 +12,7 @@ echo "Installing dependencies on Raspbian OS..."
 
 if which node >/dev/null; then echo "Node.js already installed"
 else 
-  curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+  curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
   sudo apt-get install -y nodejs
 fi
 
@@ -22,7 +22,7 @@ sudo apt-get install -y alsa-base alsa-utils
 # speaker (npm)
 sudo apt-get install -y libasound2-dev
 
-# lame (npm)
+# lame (npm) - comes bundled now
 sudo apt-get install -y libmp3lame-dev libmpg123-dev
 
 # espeak (npm)
@@ -37,16 +37,13 @@ sudo apt-get install -y opencv
 # audio players
 #sudo apt-get install -y mplayer mpg321 ffmpeg
 
-# pulse
-#sudo apt-get install -y pulseaudio libpulse-dev
-
 # pocketsphinx dependencies
-##sudo apt-get install -y cmake gcc g++ automake autoconf libtool pkg-config
-##sudo apt-get install -y bison python python-all-dev libpcre3-dev
-##sudo npm install -g cmake-js
+sudo apt-get install -y cmake gcc g++ automake autoconf libtool pkg-config
+sudo apt-get install -y bison python python-all-dev libpcre3-dev
+sudo npm install -g cmake-js
 
 # swig (Node's pocketsphinx requires swig >=3.0.7)
-##sudo apt-get install -y swig
+sudo apt-get install -y swig
 #sudo apt-get install -y swig3.0
 #sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
 #WORKDIR /kingdom/third_party
@@ -58,6 +55,7 @@ sudo apt-get install -y opencv
 #sudo make install
 
 # pocketsphinx
+sudo apt-get install -y pocketsphinx
 ##sudo mkdir -p /kingdom/third_party
 ##WORKDIR /kingdom/third_party
 ##sudo git clone https://github.com/cmusphinx/sphinxbase.git
@@ -72,7 +70,6 @@ sudo apt-get install -y opencv
 ##sudo ./configure
 ##sudo make
 ##sudo make install
-
 # to locate libpocketsphinx.so
 ##sudo ldconfig
 
