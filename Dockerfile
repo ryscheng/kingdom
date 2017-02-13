@@ -53,7 +53,7 @@ RUN apt-get install -y swig
 #RUN make
 #RUN make install
 
-# pocketsphinx
+# pocketsphinx (>=5prealpha)
 RUN apt-get install -y pocketsphinx
 #RUN mkdir -p /kingdom/third_party
 #WORKDIR /kingdom/third_party

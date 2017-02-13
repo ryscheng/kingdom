@@ -2,48 +2,58 @@
 
 ### HELPERS ###
 function aptInstall {
+  sudo apt-get install -y "$@"
+  #if which $1 >/dev/null; then echo $2 " already installed"
+  #else sudo apt install -y $2
+  #fi
+}
+
+function npmInstall {
   if which $1 >/dev/null; then echo $2 " already installed"
-  else sudo apt install -y $2
+  else npm install -g gulp
   fi
 }
 
 ### 
-echo "Installing dependencies on Raspbian OS..."
+echo "Installing system dependencies ..."
 
+# Node.js (>=6.0LTS)
 if which node >/dev/null; then echo "Node.js already installed"
 else 
   curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
   sudo apt-get install -y nodejs
+  sudo chown -R $USER /usr/local
+  npm config set prefix /usr/local
 fi
 
 # mic (npm)
-sudo apt-get install -y alsa-base alsa-utils
+aptInstall alsa-base alsa-utils
 
 # speaker (npm)
-sudo apt-get install -y libasound2-dev
+aptInstall libasound2-dev
 
 # lame (npm) - comes bundled now
-sudo apt-get install -y libmp3lame-dev libmpg123-dev
+aptInstall libmp3lame-dev libmpg123-dev
 
 # espeak (npm)
-sudo apt-get install -y espeak
+aptInstall espeak
 
 # say (npm)
-sudo apt-get install -y festival festvox-kallpc16k
+aptInstall festival festvox-kallpc16k
 
 # opencv (npm)
-sudo apt-get install -y opencv
+aptInstall opencv		#RaspbianOS
+aptInstall libopencv-dev	#Ubuntu 16.04
 
 # audio players
-#sudo apt-get install -y mplayer mpg321 ffmpeg
+#aptInstall mplayer mpg321 ffmpeg
 
 # pocketsphinx dependencies
-sudo apt-get install -y cmake gcc g++ automake autoconf libtool pkg-config
-sudo apt-get install -y bison python python-all-dev libpcre3-dev
-sudo npm install -g cmake-js
+aptInstall cmake gcc g++ automake autoconf libtool pkg-config bison python python-all-dev libpcre3-dev
+npmInstall cmake-js cmake-js
 
 # swig (Node's pocketsphinx requires swig >=3.0.7)
-sudo apt-get install -y swig
+aptInstall swig
 #sudo apt-get install -y swig3.0
 #sudo ln -s /usr/bin/swig3.0 /usr/bin/swig
 #WORKDIR /kingdom/third_party
@@ -54,8 +64,8 @@ sudo apt-get install -y swig
 #sudo make
 #sudo make install
 
-# pocketsphinx
-sudo apt-get install -y pocketsphinx
+# pocketsphinx (>=5prealpha)
+aptInstall pocketsphinx
 ##sudo mkdir -p /kingdom/third_party
 ##WORKDIR /kingdom/third_party
 ##sudo git clone https://github.com/cmusphinx/sphinxbase.git
@@ -80,5 +90,5 @@ sudo apt-get install -y pocketsphinx
 #sudo wget http://downloads.sourceforge.net/project/cmusphinx/Acoustic%20and%20Language%20Models/US%20English%20Generic%20Language%20Model/cmusphinx-5.0-en-us.lm.gz
 
 # npm global tools
-##sudo npm install -g gulp
+npmInstall gulp gulp
 

@@ -1,16 +1,43 @@
 # Kingdom
 
-Kingdom
+Kingdom is an intelligent personal assistant, written for Node.js.
 
 ## Dependencies
-- [Node](https://nodejs.org/en/) - >=5.0
+Before running Kingdom, make sure to install all of the system dependencies.
+```bash
+  bash setup.sh
+```
+This script has only been tested on Ubuntu 16.04LTS and Raspbian OS.
+If this doesn't work for you, install each system dependency in the file manually.
+We also have a Dockerfile to create a container with all the correct dependencies on an x86 machine.
+
+In particular, make sure you have the following:
+- [Node](https://nodejs.org/en/) - >=6.0LTS
 - [PocketSphinx](http://cmusphinx.sourceforge.net/wiki/tutorialpocketsphinx) - >=5alpha
-See Dockerfile for setup instructions.
-For your convenience, the Dockerfile will create a working container with all the correct dependencies
 
-## Build
-
+Once all system dependencies have been installed, install the project dependencies
 ```bash
   npm install
-  gulp
+```
+
+## Running
+First make sure you have a complete configuration file.
+
+To start Kingdom:
+```bash
+  npm start
+```
+
+
+
+## Developing
+
+To run all tests and lint scripts:
+```nodejs
+  gulp test
+```
+
+For test coverage:
+```nodejs
+  gulp coverage
 ```
