@@ -50,6 +50,7 @@
     "speaker": "^0.3.0",
     "through": "^2.3.8",
     "weather-js": "^1.0.2",
+    "winston": "^2.3.1",
     "xmlhttprequest": "^1.8.0"
   }
 }

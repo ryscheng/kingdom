@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "kingdom"
+    "name": "kingdom",
+    "keyphrases": []
   },
   "hue": {
     "addr": ""
