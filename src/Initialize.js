@@ -7,6 +7,7 @@ function initDrivers() {
   const Lights = require("./drivers/Lights");
   const AudioOut = require("./drivers/AudioOut");
   const SpeechIn = require("./drivers/SpeechIn");
+  const Camera = require("./drivers/Camera");
 
   return {
     "lights": new Lights(config.get("app.name"), config.get("hue.addr")),

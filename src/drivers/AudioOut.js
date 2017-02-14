@@ -1,20 +1,30 @@
 "use strict";
+
 const say = require("say");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 
-let DEFAULT_VOICE;
-if (process.platform === "darwin") {
-  DEFAULT_VOICE = "Alex";
-} else {
-  // say uses Festival for Linux
-  DEFAULT_VOICE = null;
-}
-
+/**
+ * Class representing the AudioOut driver
+ * AudioOut is the driver that speaks phrases and plays songs out of the speaker
+ **/
 class AudioOut {
+
+  /**
+   * Create an AudioOut driver
+   * For a list of available voices, see https://www.npmjs.com/package/say
+   * If this parameter is not specified, will use system defaults
+   * @param {string} voiceName - name of the speaker's voice.
+   **/
   constructor(voiceName) {
     this._voiceName = voiceName;
-    if (typeof voiceName === "undefined") {
+    if (typeof voiceName === "undefined" || voiceName === null) {
+      if (process.platform === "darwin") {
+        this._voiceName = "Alex";
+      } else {
+        // say uses Festival for Linux
+        this._voiceName = null;
+      }
       this._voiceName = DEFAULT_VOICE;
     }
 
@@ -24,18 +34,34 @@ class AudioOut {
     this._speaker = null;
   }
 
+  /**
+   * Say the phrase using text-to-speech
+   * @param {string} phrase - the phrase to say
+   * @return {Promise} resolves if `say` succeeds, rejects on failure
+   **/
   say(phrase) {
-    return new Promise(function(phrase1, resolve) {
-      say.speak(phrase1, this._voiceName, 1.0, function(resolve2) {
+    return new Promise(function(phrase1, resolve, reject) {
+      // (phrase, voiceName, speed, callback)
+      say.speak(phrase1, this._voiceName, 1.0, function(resolve2, reject2, err) {
+        if (err) {
+          reject2();
+        }
         resolve2();
-      }.bind(this, resolve));
+      }.bind(this, resolve, reject));
     }.bind(this, phrase));
   }
 
+  /**
+   * Returns the queue of songs on the playlist
+   * @return {Array.<Song>}
+   **/
   getSongQueue() {
     return this._songQueue;
   }
 
+  /**
+   * Clears the playlist
+   **/
   clearSongQueue() {
     this._songQueue = [];
   }

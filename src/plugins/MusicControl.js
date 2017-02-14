@@ -8,16 +8,13 @@ class MusicControl {
     // Public properties
     this.name = "Music Control";
     this.intents = {
-      "control": {
-        "name": "control",
-        "description": "Control music playback",
-        "callback": this.control.bind(this),
-        "parameters": [
-          { "name": "Command", "type": "MUSIC_COMMANDS" },
-        ],
+      "query": {
+        "name": "query",
+        "description": "Ask about next song",
+        "callback": this.nextSong.bind(this),
+        "parameters": [],
         "utterances": [
-          "*Command music",
-          "*Command song",
+          "what is the next song",
         ],
       },
       "clear": {
@@ -29,13 +26,16 @@ class MusicControl {
           "clear playlist",
         ],
       },
-      "query": {
-        "name": "query",
-        "description": "Ask about next song",
-        "callback": this.nextSong.bind(this),
-        "parameters": [],
+      "control": {
+        "name": "control",
+        "description": "Control music playback",
+        "callback": this.control.bind(this),
+        "parameters": [
+          { "name": "Command", "type": "MUSIC_COMMANDS" },
+        ],
         "utterances": [
-          "what is the next song",
+          "*Command music",
+          "*Command song",
         ],
       },
     };

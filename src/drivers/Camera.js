@@ -8,7 +8,7 @@ class Camera extends EventEmitter {
   constructor() {
     super();
     this._camera = new cv.VideoCapture(0);
-    this._window = new cv.NamedWindow('Video', 0)
+    //this._window = new cv.NamedWindow('Video', 0)
     this._intervalIds = [];
     this._prevImg = null;
     this._currImg = null;
@@ -36,10 +36,12 @@ class Camera extends EventEmitter {
       this._nextImg = im;
       
       // SHOW
+      /**
       if (im.size()[0] > 0 && im.size()[1] > 0){
         this._window.show(im);
       }
       this._window.blockingWaitKey(0, 50);
+      **/
     });
   }
 
@@ -60,6 +62,3 @@ class Camera extends EventEmitter {
 }
 
 module.exports = Camera;
-
-//let c = new Camera();
-//c.start();

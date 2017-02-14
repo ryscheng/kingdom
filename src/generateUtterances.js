@@ -27,9 +27,9 @@ Object.keys(plugins).forEach((k1) => {
 // Convert to string
 let resultStr = ""
 for (let i = 0; i < result.length; i++) {
-  resultStr += result[i] + "\n";
+  //resultStr += result[i] + "\n";
   // Replace all spaces with dashes
-  //resultStr += result[i].replace(/ /g, "-") + "\n";
+  resultStr += result[i].replace(/ /g, "-") + "\n";
 }
 console.log("---RESULT---");
 console.log(resultStr);

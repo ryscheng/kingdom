@@ -5,9 +5,6 @@ const Init = require("./Initialize");
 // Necessary for hype.js
 global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
 
-const WebService = require("./WebService");
-const web = new WebService();
-
 // Init assistant
 const Assistant = require("./Assistant");
 const app = new Assistant();
