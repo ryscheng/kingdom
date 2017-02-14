@@ -1,11 +1,23 @@
 "use strict";
 
-class MusicControl {
-  constructor(audioOut) {
-    // Private
-    this._audioOut = audioOut;
+const winston = require("winston");
 
-    // Public properties
+/**
+ * MusicControl plugin
+ * Sets up utterances and intents for controlling the music
+ * Mostly a thin shell for the AudioOut driver
+ **/
+class MusicControl {
+  
+  /**
+   * Instantiates the plugin
+   * @param {AudioOut} audioOut - driver
+   **/
+  constructor(audioOut) {
+    // Private variables
+    this._audioOut = audioOut;  // AudioOut driver
+
+    // Plugin properties
     this.name = "Music Control";
     this.intents = {
       "query": {
@@ -65,6 +77,14 @@ class MusicControl {
     **/
   }
 
+  /**
+   * Meta handler for the `control` intent.
+   * Calls the corresponding control function if it exists.
+   * Make sure that all the elements in this.types.MUSIC_COMMANDS 
+   * has a corresponding function for this to work.
+   * @param {string} cmd - name of command
+   * @return {Promise.<string>} - user response
+   **/
   control(cmd) {
     if (this.types.MUSIC_COMMANDS.indexOf(cmd) < 0) {
       return Promise.resolve(cmd + " is not a valid music command");
@@ -72,6 +92,9 @@ class MusicControl {
     return this[cmd]();
   }
 
+  /**
+   *
+   **/
   play() {
     console.log("MusicControl.play()");
     if (this._audioOut.getSongQueue().length <= 0) {
@@ -151,7 +174,7 @@ class MusicControl {
     let queue = this._audioOut.getSongQueue();
     let response;
     if (queue.length > 0) {
-      response = queue[0].artist + " and " + queue[0].title;
+      response = queue[0].getArtist() + " and " + queue[0].getTitle();
     } else {
       response = "Song queue is empty.";
     }

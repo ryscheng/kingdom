@@ -1,18 +1,30 @@
 "use strict";
 
+const winston = require("winston");
 const hypejs = require("hype.js");
 const needle = require("needle");
 const lame = require("lame");
 const Q = require("q");
 //const lazystream = require("lazystream");
 
+/**
+ * HypeMachine plugin
+ * Retrieves links from Hype Machine and queues up songs to the AudioOut driver
+ **/
 class HypeMachine {
+  
+  /**
+   * Initializes plugin
+   * @param{AudioOut} audioOut - driver
+   * @param{string} username - hypem.com username
+   **/
   constructor(audioOut, username) {
-    // Private
-    this._audioOut = audioOut;
-    this._username = username;
-    this._cachedResult = null;
-    this._queries= {
+    // Private variables
+    this.log = winston.loggers.get("plugins");
+    this._audioOut = audioOut;  // driver
+    this._username = username;  // hypem.com username
+    this._cachedResult = null;  // caches results from hypem API
+    this._queries= {            // list of hypejs calls
       "my": hypejs.profile.loved.bind(hypejs.profile, this._username),
       "feed": hypejs.profile.feed.bind(hypejs.profile, this._username),
       "history": hypejs.profile.history.bind(hypejs.profile, this._username),
@@ -21,7 +33,7 @@ class HypeMachine {
       "latest": hypejs.latest.all,
     };
 
-    // Public properties
+    // Plugin properties
     this.name = "Hype Machine";
     this.intents = {
       "queue": {
@@ -46,8 +58,16 @@ class HypeMachine {
     **/
   }
 
+  /**
+   * Handler for `queue` intent
+   * If `playlist` exists in this._queries, get that playlist
+   * Otherwise, default to favorites.
+   * Retrieve a list of urls and queue it into the AudioOut driver
+   * @param{string} playlist - name of the playlist
+   * @return{Promise.<string>} - user response
+   **/
   queue(playlist) {
-    console.log("HypeMachine.queue("+playlist+")");
+    this.log.info("HypeMachine.queue("+playlist+")");
     let ref;
     let response = "";
 
@@ -92,12 +112,12 @@ class HypeMachine {
           return needle.get(url, { compressed: true, follow_max: 5 });
         }.bind(this, this._cachedResult[i]._mp3url));
         this._cachedResult[i].mp3stream.on("error", function(entry, error) {
-          console.error("lazystream:" + error + ": " + entry.artist + " - " + entry.title);
+          this.log.error("lazystream:" + error + ": " + entry.artist + " - " + entry.title);
         }.bind(this, this._cachedResult[i]));
         **/
         this._audioOut.queueSong(this._cachedResult[i]);
       }
-      //console.log(this._cachedResult);
+      //this.log.debug(this._cachedResult);
       response += "ready to play";
       return Promise.resolve(response);
     });

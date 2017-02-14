@@ -9,6 +9,8 @@ class Song {
   constructor() {
     this._artist = "";
     this._title = "";
+    this._type = "";
+    this._url = ""
   }
 
   getArtist() {

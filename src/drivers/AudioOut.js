@@ -122,13 +122,21 @@ class AudioOut {
     return song;
   }
 
-  setSongVolume(volume) {
+  /**
+   * Sets the volume of the speaker. Does nothing if no volume object exists
+   * @param{number} volume - between 0.0 and 1.0
+   **/
+  setVolume(volume) {
+    this.log.info("AudioOut.setVolume(" + volume + ")");
     if (this._volume === null || typeof this._volume === "undefined") {
       return;
     }
     this._volume.setVolume(volume);
   }
 
+  /**
+   *
+   **/
   isPlaying() {
     return (this._songStream !== null &&
         this._volume !== null &&
@@ -167,8 +175,6 @@ class AudioOut {
       .pipe(this._speaker)
       .once("close", () => {});
   }
-
-  
 
   pause() {
     this.log.info("AudioOut.pause()");
