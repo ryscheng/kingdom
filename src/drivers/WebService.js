@@ -5,7 +5,7 @@ const path = require("path");
 const cv = require("opencv");
 const express = require("express");
 const http = require("http");
-const socketio = require("socket.io")
+const socketio = require("socket.io");
 
 class WebService extends EventEmitter {
   constructor() {
@@ -56,7 +56,7 @@ class WebService extends EventEmitter {
           }
           //console.log(im.size())
           //im.save("./stream/image_stream.jpg")
-          this._latestImage = im
+          this._latestImage = im;
           this.emit("image", im);
           this._io.sockets.emit("liveStream", "/cam/image_stream.jpg?_t=" + (Math.random() * 100000));
         });

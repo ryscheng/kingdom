@@ -13,7 +13,7 @@ let psConfig = new PocketSphinx.Decoder.DefaultConfig();
 psConfig.setString("-hmm", path.join(modeldir, "en-us"));
 psConfig.setString("-dict", path.join(modeldir, "cmudict-en-us.dict"));
 psConfig.setString("-lm", path.join(modeldir, "en-us.lm.bin"));
-psConfig.setString("-keyphrase", "hello")
+psConfig.setString("-keyphrase", "hello");
 //psConfig.setFloat("-kws_threshold", 1e+20)
 let psDecoder = new PocketSphinx.Decoder(psConfig);
 

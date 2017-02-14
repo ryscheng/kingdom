@@ -10,7 +10,7 @@ class SpeakInterface extends EventEmitter {
   constructor(speechIn, audioOut) {
     super();
     this._keyphrases = config.get("app.keyphrases");
-    this._speechIn = speechIn
+    this._speechIn = speechIn;
     this._audioOut = audioOut;
     this._readyForCmd = false;
     this._speechIn.on("command", this._onCommand.bind(this));

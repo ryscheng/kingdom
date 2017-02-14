@@ -33,7 +33,7 @@ class AudioOut {
     this._songStream = null;
     this._volume = null;
     this._speaker = null;
-    this.log.info("AudioOut Driver initialized")
+    this.log.info("AudioOut Driver initialized");
   }
 
   /**
@@ -77,7 +77,7 @@ class AudioOut {
     return new Promise(function(phrase1, resolve, reject) {
       // (phrase, voiceName, speed, callback)
       say.speak(phrase1, this._voiceName, 1.0, function(resolve2, reject2, err) {
-        this.log.verbose("AudioOut.say() finished")
+        this.log.verbose("AudioOut.say() finished");
         if (err) {
           reject2();
         }
@@ -99,7 +99,7 @@ class AudioOut {
    * Clears the playlist
    **/
   clearSongQueue() {
-    this.log.info("AudioOut.clearSongQueue()")
+    this.log.info("AudioOut.clearSongQueue()");
     this._songQueue = [];
   }
 
@@ -108,7 +108,7 @@ class AudioOut {
    * @param {Song} song - song to queue
    **/
   queueSong(song) {
-    this.log.info("AudioOut.queueSong(" + song.getArtist() + ": " + song.getTitle() + ")")
+    this.log.info("AudioOut.queueSong(" + song.getArtist() + ": " + song.getTitle() + ")");
     this._songQueue.push(song);
   }
 
@@ -119,7 +119,7 @@ class AudioOut {
   dequeueSong() {
     let song = this._songQueue.shift();
     this.log.info("AudioOut.dequeueSong() returns " + song.getArtist() + ": " + song.getTitle());
-    return song
+    return song;
   }
 
   setSongVolume(volume) {

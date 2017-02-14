@@ -9,7 +9,7 @@ const config = require("config");
 let result = [];
 
 //const drivers = Init.initDrivers();
-const drivers = {}
+const drivers = {};
 const plugins = Init.initPlugins(drivers);
 
 // For keyphrases
@@ -21,11 +21,11 @@ if (Array.isArray(keyphrases)) {
 // For each plugin
 Object.keys(plugins).forEach((k1) => {
   let plugin = plugins[k1];
-  result = result.concat(EnumerateUtterances.processPlugin(plugin))
+  result = result.concat(EnumerateUtterances.processPlugin(plugin));
 });
 
 // Convert to string
-let resultStr = ""
+let resultStr = "";
 for (let i = 0; i < result.length; i++) {
   //resultStr += result[i] + "\n";
   // Replace all spaces with dashes

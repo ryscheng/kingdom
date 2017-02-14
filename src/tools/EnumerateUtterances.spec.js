@@ -76,7 +76,7 @@ describe("EnumerateUtterances", function() {
   describe("#enumerateParameter", function() {
     it("enumerates parameter values", function() {
       const result = EnumerateUtterances.enumerateParameter("appetizer", plugin.intents["intent1"].parameters, plugin.types);
-      expect(result.length).to.equal(plugin.types["FOOD"].length)
+      expect(result.length).to.equal(plugin.types["FOOD"].length);
       expect(result).to.include.members(plugin.types["FOOD"]);
     });
 

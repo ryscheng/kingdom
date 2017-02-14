@@ -28,8 +28,8 @@ class SpeechIn extends EventEmitter {
     this._process.on("close", this._onClose.bind(this));
     // For some reason, child processes aren't automatically killed on Mac OS X
     process.on("exit", () => {
-      this._process.kill()
-    })
+      this._process.kill();
+    });
   }
 
   _resetCurrent() {
@@ -44,7 +44,7 @@ class SpeechIn extends EventEmitter {
   _onStdout(data) {
     data = data.toString();
     // Remove subsequent lines
-    data = data.substring(0, data.indexOf("\n"))
+    data = data.substring(0, data.indexOf("\n"));
     data = data.trim();
     data = data.replace(/-/g, " ");
     data = data.toLowerCase();
@@ -63,21 +63,21 @@ class SpeechIn extends EventEmitter {
     function getScore(selector, delim) {
       const index = data.indexOf(selector) + selector.length;
       let score = data.substring(index);
-      score = score.substring(0, score.indexOf("\n"))
-      score = score.substring(score.lastIndexOf(delim) + 1)
+      score = score.substring(0, score.indexOf("\n"));
+      score = score.substring(score.lastIndexOf(delim) + 1);
       score = score.trim();
       score = parseInt(score);
       return score;
     }
 
     if (data.indexOf(SCORE_SELECTOR) > -1) {
-      this._current.score = getScore(SCORE_SELECTOR, ":")
+      this._current.score = getScore(SCORE_SELECTOR, ":");
     }
     if (data.indexOf(NORMALIZER_SELECTOR) > -1) {
-      this._current.normalizer = getScore(NORMALIZER_SELECTOR, "=")
+      this._current.normalizer = getScore(NORMALIZER_SELECTOR, "=");
     }
     if (data.indexOf(JOINT_SELECTOR) > -1) {
-      this._current.joint = getScore(JOINT_SELECTOR, "=")
+      this._current.joint = getScore(JOINT_SELECTOR, "=");
     }
   }
 

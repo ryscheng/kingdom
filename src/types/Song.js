@@ -11,6 +11,14 @@ class Song {
     this._title = "";
   }
 
+  getArtist() {
+    return this._artist;
+  }
+
+  getTitle() {
+    return this._title;
+  }
+
   createStream() {
   }
 }

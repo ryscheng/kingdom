@@ -28,7 +28,7 @@ describe("Assistant", function() {
       });
       const match = function(phrase) {
         for (let i = 0; i < matcherRegEx.length; i++) {
-          let result = matcherRegEx[i].exec(phrase)
+          let result = matcherRegEx[i].exec(phrase);
           if (result) {
             //let parameters = result.slice(1);
             //console.log(phrase + " : Matches " + matchers[i]);

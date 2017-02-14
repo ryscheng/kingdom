@@ -80,7 +80,7 @@ class Assistant {
 
   launchIntent(phrase) {
     for (let i = 0; i < this._intents.length; i++) {
-      let result = this._intents[i].regex.exec(phrase)
+      let result = this._intents[i].regex.exec(phrase);
       if (result) {
         let parameters = result.slice(1);
         console.log("Matches " + this._intents[i].plugin.name + ":" + this._intents[i].utterance);

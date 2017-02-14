@@ -24,12 +24,12 @@ class Lights {
         this._client.register((err2) => {
           if (err2) {
             console.error("Error registering with Hue bridge:", err2);
-            return
+            return;
           }
-          console.log("Registered")
+          console.log("Registered");
         });
       } else if (err1) {
-        console.error("Hue error: ", err1)
+        console.error("Hue error: ", err1);
       } else {
         // Already registered, no errors
       }
@@ -45,13 +45,13 @@ class Lights {
   }
 
   _huebroadcast(method, args) {
-    let promises = []
+    let promises = [];
     for (let k in this._cacheLights) {
       if (this._cacheLights.hasOwnProperty(k)) {
-        promises.push(Q.npost(this._client, method, [k].concat(args)))
+        promises.push(Q.npost(this._client, method, [k].concat(args)));
       }
     }
-    return Q.all(promises)
+    return Q.all(promises);
   }
   
   /**
@@ -69,7 +69,7 @@ class Lights {
         if (result.hasOwnProperty(k)) {
           ret[result[k].name] = {
             "on": result[k].state.on
-          }
+          };
         }
       }
       //console.log(ret);
@@ -78,19 +78,19 @@ class Lights {
   }
 
   turnOn(name) {
-    return this._huecall("on", name, [])
+    return this._huecall("on", name, []);
   }
 
   turnOff(name) {
-    return this._huecall("off", name, [])
+    return this._huecall("off", name, []);
   }
 
   allOn() {
-    return this._huebroadcast("on", [])
+    return this._huebroadcast("on", []);
   }
 
   allOff() {
-    return this._huebroadcast("off", [])
+    return this._huebroadcast("off", []);
   }
 
 

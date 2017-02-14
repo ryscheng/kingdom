@@ -45,12 +45,12 @@ function processUtterance(utterance, parameters, types) {
   for (let i = 0; i < tokens.length; i++) {
     if (tokens[i].charAt(0) === "*") {
       let paramName = tokens[i].slice(1);
-      let paramValues = enumerateParameter(paramName, parameters, types)
+      let paramValues = enumerateParameter(paramName, parameters, types);
       for (let j = 0; j < paramValues.length; j++) {
         let paramVal = paramValues[j];
         let tokensCopy = tokens.slice();
         tokensCopy[i] = paramVal;
-        let utteranceCopy = arrayToString(tokensCopy)
+        let utteranceCopy = arrayToString(tokensCopy);
         result = result.concat(processUtterance(utteranceCopy, parameters, types));
       }
       return result;

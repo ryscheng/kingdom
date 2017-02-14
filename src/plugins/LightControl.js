@@ -6,7 +6,7 @@ class LightControl {
     this._lights = lights;
 
     // Public properties
-    this.name = "Light Control"
+    this.name = "Light Control";
     this.intents = {
       "onoff": {
         "name": "onoff",

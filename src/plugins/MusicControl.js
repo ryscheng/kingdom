@@ -153,7 +153,7 @@ class MusicControl {
     if (queue.length > 0) {
       response = queue[0].artist + " and " + queue[0].title;
     } else {
-      response = "Song queue is empty."
+      response = "Song queue is empty.";
     }
 
     return Promise.resolve(response);

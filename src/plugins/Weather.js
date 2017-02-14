@@ -8,7 +8,7 @@ const DEFAULT = "98195";
 class Weather {
   constructor() {
     // Public properties
-    this.name = "Weather"
+    this.name = "Weather";
     this.intents = {
       "query": {
         "name": "query",
@@ -60,7 +60,7 @@ class Weather {
       //console.log(result);
       let response;
       if (result.length <= 0) {
-        response = "I didn't get the location"
+        response = "I didn't get the location";
       } else {
         result = result[0];
         response = result.current.skytext +

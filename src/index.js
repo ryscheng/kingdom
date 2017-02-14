@@ -3,7 +3,7 @@
 const Init = require("./Initialize");
 
 // Necessary for hype.js
-global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
+global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 // Init assistant
 const Assistant = require("./Assistant");

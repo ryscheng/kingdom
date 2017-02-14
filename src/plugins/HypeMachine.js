@@ -22,7 +22,7 @@ class HypeMachine {
     };
 
     // Public properties
-    this.name = "Hype Machine"
+    this.name = "Hype Machine";
     this.intents = {
       "queue": {
         "name": "queue",
@@ -38,7 +38,7 @@ class HypeMachine {
     };
     this.types = {
       "HYPEM_PLAYLISTS": Object.keys(this._queries),
-    }
+    };
     /**
     this.triggers = {
       "queue :playlist hype": this.queue.bind(this),
@@ -68,7 +68,7 @@ class HypeMachine {
         if (result[i] !== null && typeof result[i] === "object" && result[i].hasOwnProperty("tracks")) {
           const tracks = result[i].tracks;
           for (let j = 0; j < tracks.length; j++) {
-            const current = tracks[j]
+            const current = tracks[j];
             this._cachedResult.push({
               "id": current.id,
               "artist": current.artist,
@@ -83,7 +83,7 @@ class HypeMachine {
         this._cachedResult[i].createStream = function(url) {
           return needle.get(url, { "compressed": true, "follow_max": 5 })
             .once("end", () => {})
-            .pipe(new lame.Decoder())
+            .pipe(new lame.Decoder());
             //.once("format", (format) => {})
             //.once("finish", () => {});
         }.bind(this, this._cachedResult[i]._mp3url);
