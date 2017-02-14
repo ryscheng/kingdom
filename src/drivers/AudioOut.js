@@ -3,6 +3,7 @@
 const say = require("say");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
+const winston = require("winston");
 
 /**
  * Class representing the AudioOut driver
@@ -17,6 +18,7 @@ class AudioOut {
    * @param {string} voiceName - name of the speaker's voice.
    **/
   constructor(voiceName) {
+    this.log = winston.loggers.get("drivers");
     this._voiceName = voiceName;
     if (typeof voiceName === "undefined" || voiceName === null) {
       if (process.platform === "darwin") {
@@ -25,13 +27,44 @@ class AudioOut {
         // say uses Festival for Linux
         this._voiceName = null;
       }
-      this._voiceName = DEFAULT_VOICE;
     }
 
     this._songQueue = [];
     this._songStream = null;
     this._volume = null;
     this._speaker = null;
+    this.log.info("AudioOut Driver initialized")
+  }
+
+  /**
+   * Start the driver.
+   * Does nothing
+   **/
+  start() {
+    this.log.info("AudioOut.start()");
+  }
+
+  /**
+   * Stops the driver
+   * Stops any currently playing songs and tears down all streams
+   **/
+  stop() {
+    this.log.info("AudioOut.stop()");
+    if (this._songStream !== null) {
+      this._songStream.unpipe();
+      this._songStream.end();
+      this._songStream = null;
+    }
+
+    if (this._volume !== null) {
+      this._volume.end();
+      this._volume = null;
+    }
+
+    if (this._speaker !== null) {
+      this._speaker.end();
+      this._speaker = null;
+    }
   }
 
   /**
@@ -40,9 +73,11 @@ class AudioOut {
    * @return {Promise} resolves if `say` succeeds, rejects on failure
    **/
   say(phrase) {
+    this.log.info("AudioOut.say(" + phrase + ")");
     return new Promise(function(phrase1, resolve, reject) {
       // (phrase, voiceName, speed, callback)
       say.speak(phrase1, this._voiceName, 1.0, function(resolve2, reject2, err) {
+        this.log.verbose("AudioOut.say() finished")
         if (err) {
           reject2();
         }
@@ -56,6 +91,7 @@ class AudioOut {
    * @return {Array.<Song>}
    **/
   getSongQueue() {
+    this.log.info("AudioOut.getSongQueue() returns " + this._songQueue.length + " items");
     return this._songQueue;
   }
 
@@ -63,15 +99,27 @@ class AudioOut {
    * Clears the playlist
    **/
   clearSongQueue() {
+    this.log.info("AudioOut.clearSongQueue()")
     this._songQueue = [];
   }
 
+  /**
+   * Add a song to the queue
+   * @param {Song} song - song to queue
+   **/
   queueSong(song) {
+    this.log.info("AudioOut.queueSong(" + song.getArtist() + ": " + song.getTitle() + ")")
     this._songQueue.push(song);
   }
 
+  /**
+   * Dequeue first song and return it
+   * @return {Song} first song in the queue
+   **/
   dequeueSong() {
-    return this._songQueue.shift();
+    let song = this._songQueue.shift();
+    this.log.info("AudioOut.dequeueSong() returns " + song.getArtist() + ": " + song.getTitle());
+    return song
   }
 
   setSongVolume(volume) {
@@ -94,15 +142,15 @@ class AudioOut {
   }
 
   play() {
-    console.log("AudioOut.play()");
+    this.log.info("AudioOut.play()");
     if (this.getSongQueue().length <= 0) {
       // No songs to play
-      console.warn("AudioOut.play(): returns. Empty song queue");
+      this.log.warn("AudioOut.play(): returns. Empty song queue");
       return;
     }
     if (this.isPlaying()) {
       // Already playing something
-      console.warn("AudioOut.play(): returns. Already playing");
+      this.log.warn("AudioOut.play(): returns. Already playing");
       return;
     }
 
@@ -120,27 +168,10 @@ class AudioOut {
       .once("close", () => {});
   }
 
-  stop() {
-    console.log("AudioOut.stop()");
-    if (this._songStream !== null) {
-      this._songStream.unpipe();
-      this._songStream.end();
-      this._songStream = null;
-    }
-
-    if (this._volume !== null) {
-      this._volume.end();
-      this._volume = null;
-    }
-
-    if (this._speaker !== null) {
-      this._speaker.end();
-      this._speaker = null;
-    }
-  }
+  
 
   pause() {
-    console.log("AudioOut.pause()");
+    this.log.info("AudioOut.pause()");
     if (this._volume !== null) {
       this._volume.end();
       this._volume = null;
@@ -153,9 +184,9 @@ class AudioOut {
   }
 
   resume() {
-    console.log("AudioOut.resume()");
+    this.log.info("AudioOut.resume()");
     if (!this.isPaused()) {
-      console.warn("AudioOut.resume: returns. Not in a resumable state");
+      this.log.warn("AudioOut.resume: returns. Not in a resumable state");
       return;
     }
 
@@ -169,7 +200,7 @@ class AudioOut {
   }
 
   _onSongDone() {
-    //console.log("AudioOut._onSongDone()");
+    //this.log.info("AudioOut._onSongDone()");
     //@todo this is triggered on pause
   }
 

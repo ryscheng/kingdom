@@ -7,6 +7,8 @@
 class Song {
 
   constructor() {
+    this._artist = "";
+    this._title = "";
   }
 
   createStream() {

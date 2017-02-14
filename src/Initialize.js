@@ -1,13 +1,30 @@
 "use strict";
 
 const config = require("config");
+const winston = require("winston");
+
+// Logging
+function createLogger(name) {
+  winston.loggers.add(name, {
+    "console": {
+      "timestamp": true,
+      "colorize": true,
+      "label": name,
+    },
+    //file: { filename: "" },
+  });
+}
+createLogger("core");
+createLogger("drivers");
+createLogger("plugins");
+createLogger("interfaces");
 
 function initDrivers() {
   /////// http://192.168.0.13/debug/clip.html
   const Lights = require("./drivers/Lights");
   const AudioOut = require("./drivers/AudioOut");
   const SpeechIn = require("./drivers/SpeechIn");
-  const Camera = require("./drivers/Camera");
+  //const Camera = require("./drivers/Camera");
 
   return {
     "lights": new Lights(config.get("app.name"), config.get("hue.addr")),
@@ -32,13 +49,13 @@ function initPlugins(drivers) {
 
 function initInterfaces(drivers) {
   const CLI = require("./interfaces/CLI");
-  const Gmail = require("./interfaces/Gmail")
   const SpeakInterface = require("./interfaces/SpeakInterface");
+  //const Gmail = require("./interfaces/Gmail")
 
   return {
     "cli": new CLI(),
-    //"gmail": new Gmail(config.get("google.auth.clientId"), config.get("google.auth.clientSecret"), config.get("google.auth.authCode"), config.get("google.gmail.authorizedUsers"), config.get("google.gmail.topic")),
     "speakInterface": new SpeakInterface(drivers.speechIn, drivers.audioOut),
+    //"gmail": new Gmail(config.get("google.auth.clientId"), config.get("google.auth.clientSecret"), config.get("google.auth.authCode"), config.get("google.gmail.authorizedUsers"), config.get("google.gmail.topic")),
   };
 }
 

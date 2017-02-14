@@ -11,8 +11,8 @@ const fs = require("fs-extra");
 gulp.task("lint", function() {
   return gulp.src([ "src/**/*.js" ])
     .pipe(eslint({ useEslintrc: true }))
-    .pipe(eslint.format())
-    .pipe(eslint.failOnError());
+    .pipe(eslint.format());
+    //.pipe(eslint.failOnError());
 });
 
 gulp.task("mocha", () => {

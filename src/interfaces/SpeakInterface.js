@@ -30,7 +30,7 @@ class SpeakInterface extends EventEmitter {
         console.log("Waiting for command");
         setTimeout(this._reset.bind(this), TIMEOUT);
       } else {
-        if (this._readyForCmd == true) {
+        if (this._readyForCmd === true) {
           this.emit("command", command.line);
           console.log("... emitted");
           this._reset();

@@ -21,7 +21,7 @@ class SpeechIn extends EventEmitter {
       "-samprate", "16000/8000/48000",
       "-inmic", "yes",
       "-adcdev", "sysdefault",
-    ], { detached: false });
+    ], { "detached": false });
 
     this._process.stdout.on("data", this._onStdout.bind(this));
     this._process.stderr.on("data", this._onStderr.bind(this));
@@ -34,10 +34,10 @@ class SpeechIn extends EventEmitter {
 
   _resetCurrent() {
     this._current = {
-      line: "",
-      score: Number.MIN_SAFE_INTEGER,
-      normalizer: Number.MIN_SAFE_INTEGER,
-      joint: Number.MIN_SAFE_INTEGER,
+      "line": "",
+      "score": Number.MIN_SAFE_INTEGER,
+      "normalizer": Number.MIN_SAFE_INTEGER,
+      "joint": Number.MIN_SAFE_INTEGER,
     };
   }
 
@@ -50,7 +50,7 @@ class SpeechIn extends EventEmitter {
     data = data.toLowerCase();
 
     // Ignore empty commands
-    if (data != "") {
+    if (data !== "") {
       this._current.line = data;
       this.emit("command", this._current);
       this._resetCurrent();

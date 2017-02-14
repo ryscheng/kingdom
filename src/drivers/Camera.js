@@ -29,7 +29,9 @@ class Camera extends EventEmitter {
 
   _readImage() {
     this._camera.read((err, im) => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
       im.convertGrayscale();
       this._prevImg = this._currImg;
       this._currImg = this._nextImg;
@@ -52,11 +54,13 @@ class Camera extends EventEmitter {
       return;
     }
 
+    /**
     cv.ImageSimilarity(this._nextImg, this._currImg, (err, result) => {
       console.log("!!!!")
       console.log(err);
       console.log(result);
     });
+    **/
 
   }
 }
