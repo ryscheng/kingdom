@@ -70,14 +70,14 @@ class HypeMachine {
     let ref;            // function to call to get a playlist
     let response = "";  // user response
 
-    // Set defaults
+    // Set default playlist
     if (!this._queries.hasOwnProperty(playlistName) ||
         playlistName === null ||
         typeof playlistName === "undefined") {
       playlistName = "my";
       response += "unrecognized playlist. defaulting to my favorites. ";
       this.log.verbose("HypeMachine.queue() defaulting to default, my favorites");
-    } 
+    }
     ref = this._queries[playlistName];
 
     // If cached, just use cached copy
@@ -91,6 +91,7 @@ class HypeMachine {
     }
 
     // Get playlist information from hypem.com
+    // @todo - what if this fails? or username does not exist?
     this.log.verbose("HypeMachine.queue() fetching playlist from hypem.com");
     return Q.nfapply(ref, [ "0" ]).then((result) => {
       this._cachedResult[playlistName] = [];

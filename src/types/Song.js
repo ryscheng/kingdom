@@ -1,5 +1,6 @@
 "use strict";
 
+const winston = require("winston");
 const needle = require("needle");
 const lame = require("lame");
 
@@ -9,6 +10,13 @@ const lame = require("lame");
  **/
 class Song {
 
+  /**
+   * Constructs new Song
+   * @param{string} artist - artists name
+   * @param{string} title - song title
+   * @param{string} type - resource type (currently ignored. Assumed to be 'mp3')
+   * @param{string} url - URL to the resource - Must be an HTTP(S) link to an mp3
+   **/
   constructor(artist, title, type, url) {
     this._artist = artist;
     this._title = title;
@@ -16,14 +24,27 @@ class Song {
     this._url = url;
   }
 
+  /**
+   * Retrieve artist name
+   * @return{string} artist name
+   **/
   getArtist() {
     return this._artist;
   }
 
+  /**
+   * Retrieve song title
+   * @return{string} song title
+   **/
   getTitle() {
     return this._title;
   }
 
+  /**
+   * Creates a readable stream of audio data
+   * NOTE: Currently assumes the url is an HTTP(S) link to an mp3
+   * @return{Stream} stream of raw PCM data (for speaker)
+   **/
   createStream() {
     return needle.get(url, { "compressed": true, "follow_max": 5 })
       .once("end", () => {})
@@ -39,5 +60,6 @@ class Song {
     }.bind(this, this._cachedResult[i]));
     **/
   }
+}
 
 module.exports = Song;
