@@ -3,6 +3,7 @@
 const winston = require("winston");
 const needle = require("needle");
 const lame = require("lame");
+const multipipe = require("multipipe");
 
 /**
  * Song represents all of the data associated with a song to play,
@@ -46,11 +47,13 @@ class Song {
    * @return{Stream} stream of raw PCM data (for speaker)
    **/
   createStream() {
-    return needle.get(url, { "compressed": true, "follow_max": 5 })
-      .once("end", () => {})
-      .pipe(new lame.Decoder());
+    let stream = multipipe(
+      needle.get(this._url, { "compressed": true, "follow_max": 5 }),
+      new lame.Decoder()
+    );
+    return stream;
+      //.once("error", () => {})
       //.once("format", (format) => {})
-      //.once("finish", () => {});
     /**
     this._cachedResult[i].mp3stream = new lazystream.Readable(function(url, opts) {
       return needle.get(url, { compressed: true, follow_max: 5 });
