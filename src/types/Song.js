@@ -19,6 +19,7 @@ class Song {
    * @param{string} url - URL to the resource - Must be an HTTP(S) link to an mp3
    **/
   constructor(artist, title, type, url) {
+    this.log = winston.loggers.get("misc");
     this._artist = artist;
     this._title = title;
     this._type = type;
@@ -47,6 +48,7 @@ class Song {
    * @return{Stream} stream of raw PCM data (for speaker)
    **/
   createStream() {
+    this.log.verbose("Song.createStream() for " + this._artist + " - " + this._title);
     let stream = multipipe(
       needle.get(this._url, { "compressed": true, "follow_max": 5 }),
       new lame.Decoder()

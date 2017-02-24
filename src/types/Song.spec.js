@@ -3,6 +3,7 @@
 
 const expect = require("chai").expect;
 const Song = require("./Song");
+require("../tools/loggerLevel").setLevel("warn");
 
 describe("Song", function() {
   const ARTIST = "booboojenkins";
@@ -29,39 +30,47 @@ describe("Song", function() {
   describe("#createStream", function() {
     it("errors for invalid types", function(done) {
       let s = new Song(ARTIST, TITLE, "", "");
-      done();
+      let stream = s.createStream();
+      //stream.on("format", console.log);
+      stream.on("data", (data) => {
+        expect(data).to.not.exist;
+      });
+      stream.on("error", (data) => {
+        expect(data).to.not.exist;
+      });
+      stream.on("end", () => {
+        done();
+      });
     });
 
     it("errors for invalid URLs", function(done) {
       let s = new Song(ARTIST, TITLE, "mp3", "");
       let stream = s.createStream();
-      stream.on("format", (data) => {
-        console.log("format");
-        console.log(data);
-        done();
-      });
+      //stream.on("format", console.log);
       stream.on("data", (data) => {
-        console.log("data");
-        console.log(data);
-        done();
-      });
-      stream.on("end", (data) => {
-        console.log("end");
-        console.log(data);
-        done();
+        expect(data).to.not.exist;
       });
       stream.on("error", (data) => {
-        console.log("error");
-        console.log(data);
+        expect(data).to.not.exist;
+      });
+      stream.on("end", () => {
         done();
       });
-
-      stream.read(0);
+      //stream.read(0);
     });
 
     it("streams for valid URLs", function(done) {
-      let s = new Song(ARTIST, TITLE, "mp3", "");
-      done();
+      let s = new Song(ARTIST, TITLE, "mp3", "http://localhost:3000/download/baby.mp3");
+      let stream = s.createStream();
+      //stream.on("format", console.log);
+      stream.once("data", (data) => {
+        expect(data).to.exist;
+        done();
+      });
+      stream.on("error", (data) => {
+        expect(data).to.not.exist;
+      });
+      stream.on("end", () => {});
     });
   });
 

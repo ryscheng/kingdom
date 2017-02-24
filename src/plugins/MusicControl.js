@@ -80,7 +80,7 @@ class MusicControl {
   /**
    * Meta handler for the `control` intent.
    * Calls the corresponding control function if it exists.
-   * Make sure that all the elements in this.types.MUSIC_COMMANDS 
+   * Make sure that all the elements in this.types.MUSIC_COMMANDS
    * has a corresponding function for this to work.
    * @param {string} cmd - name of command
    * @return {Promise.<string>} - user response

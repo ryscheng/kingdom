@@ -7,6 +7,19 @@ const jsdoc = require("gulp-jsdoc3");
 const mocha = require("gulp-mocha");
 const istanbul = require('gulp-istanbul');
 const fs = require("fs-extra");
+const connect = require("gulp-connect");
+const runSequence = require("run-sequence");
+
+gulp.task("start-serve", function() {
+  connect.server({
+    "root": "public/",
+    "port": "3000"
+  });
+});
+
+gulp.task("stop-serve", function() {
+  connect.serverClose();
+});
 
 gulp.task("lint", function() {
   return gulp.src([ "src/**/*.js" ])
@@ -15,7 +28,7 @@ gulp.task("lint", function() {
     //.pipe(eslint.failOnError());
 });
 
-gulp.task("mocha", () => {
+gulp.task("mocha", function() {
   return gulp.src("./src/**/*.spec.js")
     .pipe(mocha({ reporter: "spec" }));
 });
@@ -55,5 +68,7 @@ gulp.task("clean", function() {
 });
 //gulp.task("init", [ "copy_client" ])
 gulp.task("build", [ ]);
-gulp.task("test", [ "lint", "mocha" ]);
-gulp.task("default", [ "build", "test" ]);
+gulp.task("test", function(done) {
+  runSequence("start-serve", "mocha", "stop-serve", done);
+});
+gulp.task("default", [ "build", "lint", "test" ]);

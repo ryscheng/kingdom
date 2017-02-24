@@ -100,7 +100,8 @@ class HypeMachine {
           const tracks = result[i].tracks;
           for (let j = 0; j < tracks.length; j++) {
             const current = tracks[j];
-            let song = new Song(current.artist, current.title, "mp3", "https://hypem.com/serve/public/" + current.id);
+            let url = "https://hypem.com/serve/public/" + current.id;
+            let song = new Song(current.artist, current.song, "mp3", url);
             this._cachedResult[playlistName].push(song);
             this._audioOut.queueSong(song);
           }

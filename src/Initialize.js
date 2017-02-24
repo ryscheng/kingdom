@@ -3,6 +3,14 @@
 const config = require("config");
 const winston = require("winston");
 
+const LOGGER_NAMES = [
+  "core",
+  "drivers",
+  "plugins",
+  "interfaces",
+  "misc",
+];
+
 // Logging
 function createLogger(name) {
   winston.loggers.add(name, {
@@ -14,10 +22,9 @@ function createLogger(name) {
     //file: { filename: "" },
   });
 }
-createLogger("core");
-createLogger("drivers");
-createLogger("plugins");
-createLogger("interfaces");
+LOGGER_NAMES.forEach((name) => {
+  createLogger(name);
+});
 
 function initDrivers() {
   /////// http://192.168.0.13/debug/clip.html
@@ -62,3 +69,4 @@ function initInterfaces(drivers) {
 module.exports.initDrivers = initDrivers;
 module.exports.initPlugins = initPlugins;
 module.exports.initInterfaces = initInterfaces;
+module.exports.loggerNames = LOGGER_NAMES;

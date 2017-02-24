@@ -26,6 +26,8 @@ class SpeechIn extends EventEmitter {
     this._process.stdout.on("data", this._onStdout.bind(this));
     this._process.stderr.on("data", this._onStderr.bind(this));
     this._process.on("close", this._onClose.bind(this));
+    this._process.on("error", this._onClose.bind(this));
+    this._process.on("exit", this._onClose.bind(this));
     // For some reason, child processes aren't automatically killed on Mac OS X
     process.on("exit", () => {
       this._process.kill();
