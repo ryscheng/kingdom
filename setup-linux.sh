@@ -42,8 +42,7 @@ aptInstall espeak
 aptInstall festival festvox-kallpc16k
 
 # opencv (npm)
-aptInstall opencv		#RaspbianOS
-aptInstall libopencv-dev	#Ubuntu 16.04
+aptInstall libopencv-dev
 
 # audio players
 #aptInstall mplayer mpg321 ffmpeg
