@@ -11,6 +11,7 @@
   },
   "pocketsphinx": {
     "bin": "",
+    "device": "",
     "hmm": "",
     "lm": "",
     "dict": ""

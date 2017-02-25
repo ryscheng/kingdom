@@ -18,9 +18,9 @@ class SpeechIn extends EventEmitter {
       "-hmm", pocketsphinxOpts.hmm,
       "-lm", pocketsphinxOpts.lm,
       "-dict", pocketsphinxOpts.dict,
-      "-samprate", "16000/8000/48000",
+      "-adcdev", pocketsphinxOpts.device,
       "-inmic", "yes",
-      "-adcdev", "sysdefault",
+      "-samprate", "16000/8000/48000",
     ], { "detached": false });
 
     this._process.stdout.on("data", this._onStdout.bind(this));
