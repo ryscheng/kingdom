@@ -3,7 +3,7 @@
 const EventEmitter = require("events");
 const config = require("config");
 
-const TIMEOUT = 5000;
+const TIMEOUT = 10000;
 const RESPONSE_MSG = "how can I help you?";
 
 class SpeakInterface extends EventEmitter {
@@ -26,7 +26,7 @@ class SpeakInterface extends EventEmitter {
     if (command.score > -6000) {
       if (this._keyphrases.indexOf(command.line) > -1) {
         this._readyForCmd = true;
-        this._audioOut.say(RESPONSE_MSG);
+        //this._audioOut.say(RESPONSE_MSG);
         console.log("Waiting for command");
         setTimeout(this._reset.bind(this), TIMEOUT);
       } else {
