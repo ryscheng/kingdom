@@ -45,12 +45,29 @@ class Song {
   /**
    * Creates a readable stream of audio data
    * NOTE: Currently assumes the url is an HTTP(S) link to an mp3
+   * @param{Object.<string, string>} opts - override options for needle
    * @return{Stream} stream of raw PCM data (for speaker)
    **/
-  createStream() {
+  createStream(opts) {
     this.log.verbose("Song.createStream() for " + this._artist + " - " + this._title);
+
+    // Mix in opts parameter
+    let needleOpts = { 
+      "open_timeout": 5000,
+      "read_timeout": 0,
+      "follow_max": 5, 
+      // HTTP Headers
+      "compressed": true,
+      "connection": "Close",
+    };
+    if (opts !== null && typeof opts !== "undefined") {
+      Object.keys(opts).forEach((k) => {
+        needleOpts[k] = opts[k];
+      });
+    }
+
     let stream = multipipe(
-      needle.get(this._url, { "compressed": true, "follow_max": 5 }),
+      needle.get(this._url, needleOpts),
       new lame.Decoder()
     );
     return stream;

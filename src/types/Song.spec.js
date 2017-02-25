@@ -29,7 +29,7 @@ describe("Song", function() {
 
   describe("#createStream", function() {
     it("errors for invalid types", function(done) {
-      let s = new Song(ARTIST, TITLE, "", "");
+      let s = new Song(ARTIST, TITLE, "faketype", "fakeurl");
       let stream = s.createStream();
       //stream.on("format", console.log);
       stream.on("data", (data) => {
@@ -38,13 +38,13 @@ describe("Song", function() {
       stream.on("error", (data) => {
         expect(data).to.not.exist;
       });
-      stream.on("end", () => {
+      stream.once("end", () => {
         done();
       });
     });
 
     it("errors for invalid URLs", function(done) {
-      let s = new Song(ARTIST, TITLE, "mp3", "");
+      let s = new Song(ARTIST, TITLE, "mp3", "fakeurl");
       let stream = s.createStream();
       //stream.on("format", console.log);
       stream.on("data", (data) => {
@@ -57,6 +57,21 @@ describe("Song", function() {
         done();
       });
       //stream.read(0);
+    });
+    
+    it("errors for real non-MP3 URLs", function(done) {
+      let s = new Song(ARTIST, TITLE, "mp3", "http://localhost");
+      let stream = s.createStream({ "read_timeout": 20 });
+      //stream.on("format", console.log);
+      stream.on("data", (data) => {
+        expect(data).to.not.exist;
+      });
+      stream.on("error", (data) => {
+        expect(data).to.not.exist;
+      });
+      stream.on("end", () => {
+        done();
+      });
     });
 
     it("streams for valid URLs", function(done) {
