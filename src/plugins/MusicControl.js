@@ -1,7 +1,5 @@
 "use strict";
 
-const winston = require("winston");
-
 /**
  * MusicControl plugin
  * Sets up utterances and intents for controlling the music

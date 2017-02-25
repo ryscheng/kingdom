@@ -52,10 +52,10 @@ class Song {
     this.log.verbose("Song.createStream() for " + this._artist + " - " + this._title);
 
     // Mix in opts parameter
-    let needleOpts = { 
+    let needleOpts = {
       "open_timeout": 5000,
       "read_timeout": 0,
-      "follow_max": 5, 
+      "follow_max": 5,
       // HTTP Headers
       "compressed": true,
       "connection": "Close",

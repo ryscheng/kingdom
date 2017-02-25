@@ -135,7 +135,8 @@ class AudioOut {
   }
 
   /**
-   *
+   * Returns true if a song is playing
+   * @return {boolean} true if a song is playing
    **/
   isPlaying() {
     return (this._songStream !== null &&
@@ -143,12 +144,19 @@ class AudioOut {
         this._speaker !== null);
   }
 
+  /**
+   * Returns true if a song loaded but paused
+   * @return {boolean}
+   **/
   isPaused() {
     return (this._songStream !== null &&
         this._volume === null &&
         this._speaker === null);
   }
 
+  /**
+   * Play the first song on the playlist
+   **/
   play() {
     this.log.info("AudioOut.play()");
     if (this.getSongQueue().length <= 0) {
@@ -176,6 +184,9 @@ class AudioOut {
       .once("close", () => {});
   }
 
+  /**
+   * Pause the current song in place
+   **/
   pause() {
     this.log.info("AudioOut.pause()");
     if (this._volume !== null) {
@@ -189,6 +200,9 @@ class AudioOut {
     }
   }
 
+  /**
+   * Resume the 
+   **/
   resume() {
     this.log.info("AudioOut.resume()");
     if (!this.isPaused()) {
