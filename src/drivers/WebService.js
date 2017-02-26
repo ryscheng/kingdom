@@ -1,5 +1,7 @@
 "use strict";
 
+const winston = require("winston");
+const Q = require("q");
 const EventEmitter = require("events");
 const path = require("path");
 const cv = require("opencv");
@@ -7,21 +9,66 @@ const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
 
+/**
+ * Class representing the WebService driver
+ * In order to present a unified web interface, plugins can register routes with this centralized service
+ **/
 class WebService extends EventEmitter {
-  constructor() {
+
+  /**
+   * Create a new WebService driver
+   * @param {number} port - port for HTTP server to listen on
+   **/
+  constructor(port) {
     super();
+    // Private variables
+    this.log = winston.loggers.get("drivers");
+    this._port = port;
     this._app = express();
     this._server = http.Server(this._app);
     this._io = socketio(this._server);
     this._sockets = {};
     this._latestImage = null;
 
+    // Setup routes
     this._setupRoutes();
-    this._server.listen(8000, () => {
-      console.log("listening on *:8000");
+    this.log.info("WebService driver initialized");
+  }
+  
+  /********************************
+   * PUBLIC METHODS
+   ********************************/
+
+  /**
+   * Start the driver.
+   * Starts listening on the configured port
+   * @return {Promise} resolves when done
+   **/
+  start() {
+    this.log.info("WebService.start()");
+    return Q.npost(this._server, "listen", [ this._port ]).then(() => {
+      this.log.info("WebService is listening on *:" + this._port);
+      return Promise.resolve();
     });
   }
 
+   /**
+   * Stops the driver.
+   * Closes the HTTP server
+   * @return {Promise} resolves when done
+   **/
+  stop() {
+    this.log.info("WebService.stop()");
+    return Q.npost(this._server, "close", []).then(() => {
+      this.log.info("WebService HTTP server closed");
+      return Promise.resolve();
+    });
+  }
+
+  /********************************
+   * PRIVATE METHODS
+   ********************************/
+  // @TODO - docs and logging
   _setupRoutes() {
     //app.use("/", express.static(path.join(__dirname, "stream")));
     this._app.get("/cam/image_stream.jpg", (req, res) => {

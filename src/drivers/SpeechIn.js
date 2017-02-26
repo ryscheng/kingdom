@@ -87,6 +87,12 @@ class SpeechIn extends EventEmitter {
     console.log("Pocketsphinx process closed with code=" + code);
   }
 
+  start() {
+  }
+
+  stop() {
+  }
+
 }
 
 module.exports = SpeechIn;

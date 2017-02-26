@@ -33,20 +33,27 @@ class AudioOut {
     this._songStream = null;
     this._volume = null;
     this._speaker = null;
-    this.log.info("AudioOut Driver initialized");
+    this.log.info("AudioOut driver initialized");
   }
+
+  /********************************
+   * PUBLIC METHODS
+   ********************************/
 
   /**
    * Start the driver.
    * Does nothing
+   * @return {Promise} resolves when done
    **/
   start() {
     this.log.info("AudioOut.start()");
+    return Promise.resolve();
   }
 
   /**
    * Stops the driver
    * Stops any currently playing songs and tears down all streams
+   * @return {Promise} resolves when done
    **/
   stop() {
     this.log.info("AudioOut.stop()");
@@ -65,6 +72,7 @@ class AudioOut {
       this._speaker.end();
       this._speaker = null;
     }
+    return Promise.resolve();
   }
 
   /**
@@ -77,7 +85,7 @@ class AudioOut {
     return new Promise(function(phrase1, resolve, reject) {
       // (phrase, voiceName, speed, callback)
       say.speak(phrase1, this._voiceName, 1.0, function(resolve2, reject2, err) {
-        this.log.verbose("AudioOut.say() finished");
+        this.log.debug("AudioOut.say() finished");
         if (err) {
           reject2();
         }
@@ -201,7 +209,7 @@ class AudioOut {
   }
 
   /**
-   * Resume the 
+   * Resume the current song
    **/
   resume() {
     this.log.info("AudioOut.resume()");
@@ -216,8 +224,12 @@ class AudioOut {
       .pipe(this._volume)
       .pipe(this._speaker)
       .once("close", () => {});
-    
   }
+
+
+  /********************************
+   * PRIVATE METHODS
+   ********************************/
 
   _onSongDone() {
     //this.log.info("AudioOut._onSongDone()");

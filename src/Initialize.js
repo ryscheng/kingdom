@@ -18,6 +18,7 @@ function createLogger(name) {
       "timestamp": true,
       "colorize": true,
       "label": name,
+      "level": "debug",
     },
     //file: { filename: "" },
   });

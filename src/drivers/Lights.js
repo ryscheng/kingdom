@@ -1,9 +1,22 @@
 "use strict";
+
+const winston = require("winston");
 const Q = require("q");
 const hue = require("hue.js");
 
+/**
+ * Class representing the Lights driver
+ * Interacts with the Philips Hue system to turn lights on and off
+ **/
 class Lights {
+
+  /**
+   * Create a Lights driver
+   * @param {string} appName - name of the application to register with the Hue bridge
+   * @param {string} addr - IP address of the Hue bridge
+   **/
   constructor(appName, addr) {
+    this.log = winston.loggers.get("drivers");
     this._appName = appName;
     this._addr = addr;
     this._client = hue.createClient({
@@ -11,49 +24,47 @@ class Lights {
       "appName": appName
     });
     this._cacheLights = {};
-    this._init();
+
+    this.log.info("Lights driver initialized");
   }
-
-  _init() {
-    // Try to get the list of lights. Register if necessary
-    this._client.lights((err1, lights) => {
+  
+  /********************************
+   * PUBLIC METHODS
+   ********************************/
+  
+  /**
+   * Start the driver
+   * Tries to register with the Hue bridge if necessary.
+   * If first time running with this 'appName', then you may
+   *  need to push the physical button on the bridge when prompted
+   * @return {Promise} resolves when done
+   **/
+  start() {
+    this.log.info("Lights.start()");
+    // Try to get the list of lights.
+    return Q.npost(this._client, "lights", []).then((lights) => {
       this._cacheLights = lights;
-
-      if (err1 && err1.type === 1) {
-        console.log("Please go and press the link button on your base station(s)");
-        this._client.register((err2) => {
-          if (err2) {
-            console.error("Error registering with Hue bridge:", err2);
-            return;
-          }
-          console.log("Registered");
-        });
-      } else if (err1) {
-        console.error("Hue error: ", err1);
-      } else {
-        // Already registered, no errors
-      }
+      return Promise.resolve();
+    }).catch((err) => {
+      // If we need to register, try to handle that first
+      if (err.type === 1) {
+        this.log.info("Please go and press the link button on your base station(s)");
+        return Q.npost(this._client, "register", []);
+      } 
+      return Promise.reject(err);
     });
   }
 
-  _huecall(method, name, args) {
-    for (let k in this._cacheLights) {
-      if (this._cacheLights.hasOwnProperty(k) && this._cacheLights[k].name === name) {
-        return Q.npost(this._client, method, [k].concat(args));
-      }
-    }
+  /**
+   * Stop the driver
+   * Does nothing
+   * @return {Promise} resolves when done
+   **/
+  stop() {
+    this.log.info("Lights.stop()");
+    return Promise.resolve();
   }
 
-  _huebroadcast(method, args) {
-    let promises = [];
-    for (let k in this._cacheLights) {
-      if (this._cacheLights.hasOwnProperty(k)) {
-        promises.push(Q.npost(this._client, method, [k].concat(args)));
-      }
-    }
-    return Q.all(promises);
-  }
-  
   /**
    *
    * @return {Object.<string, Object>} name -> {
@@ -64,7 +75,6 @@ class Lights {
     return Q.ninvoke(this._client, "lights").then((result) => {
       let ret = {};
       this._cacheLights = result;
-      //console.log(result);
       for (let k in result) {
         if (result.hasOwnProperty(k)) {
           ret[result[k].name] = {
@@ -72,7 +82,6 @@ class Lights {
           };
         }
       }
-      //console.log(ret);
       return Promise.resolve(ret);
     });
   }
@@ -93,7 +102,29 @@ class Lights {
     return this._huebroadcast("off", []);
   }
 
+  
+  /********************************
+   * PRIVATE METHODS
+   ********************************/
 
+  _huecall(method, name, args) {
+    for (let k in this._cacheLights) {
+      if (this._cacheLights.hasOwnProperty(k) && this._cacheLights[k].name === name) {
+        return Q.npost(this._client, method, [k].concat(args));
+      }
+    }
+  }
+
+  _huebroadcast(method, args) {
+    let promises = [];
+    for (let k in this._cacheLights) {
+      if (this._cacheLights.hasOwnProperty(k)) {
+        promises.push(Q.npost(this._client, method, [k].concat(args)));
+      }
+    }
+    return Q.all(promises);
+  }
+  
 }
 
 module.exports = Lights;
