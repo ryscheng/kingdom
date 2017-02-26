@@ -51,12 +51,23 @@ class SpeechIn extends EventEmitter {
    ********************************/
 
   /**
+   * Checks if the driver is started
+   **/
+  isRunning() {
+    return this._process !== null;
+  }
+
+  /**
    * Start the driver.
    * Starts a pocketsphinx_continuous process
    * @return {Promise} resolves when done
    **/
   start() {
     this.log.info("SpeechIn.start()");
+    if (this.isRunning()) {
+      this.log.verbose("SpeechIn already runnning");
+      return Promise.resolve();
+    }
     this._process = ChildProcess.spawn(this._pocketsphinxOpts.bin, [
       "-hmm", this._pocketsphinxOpts.hmm,
       "-lm", this._pocketsphinxOpts.lm,

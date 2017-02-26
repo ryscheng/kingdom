@@ -23,7 +23,7 @@ class Lights {
       "stationIp": addr,
       "appName": appName
     });
-    this._cacheLights = {};
+    this._cacheLights = null;
 
     this.log.info("Lights driver initialized");
   }
@@ -32,6 +32,14 @@ class Lights {
    * PUBLIC METHODS
    ********************************/
   
+  /**
+   * Checks if the driver is started
+   * @return {boolean}
+   **/
+  isRunning() {
+    return this._cacheLights !== null;
+  }
+
   /**
    * Start the driver
    * Tries to register with the Hue bridge if necessary.

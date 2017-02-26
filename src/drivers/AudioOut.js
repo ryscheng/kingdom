@@ -1,15 +1,20 @@
 "use strict";
 
+const EventEmitter = require("events");
 const say = require("say");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 const winston = require("winston");
+const Q = require("q");
 
 /**
  * Class representing the AudioOut driver
  * AudioOut is the driver that speaks phrases and plays songs out of the speaker
+ *
+ * Events:
+ * - "audio": boolean  // True is audio is playing (or speaking), false if silent
  **/
-class AudioOut {
+class AudioOut extends EventEmitter {
 
   /**
    * Create an AudioOut driver
@@ -18,8 +23,17 @@ class AudioOut {
    * @param {string} voiceName - name of the speaker's voice.
    **/
   constructor(voiceName) {
+    super();
+    // Private variables
     this.log = winston.loggers.get("drivers");
     this._voiceName = voiceName;
+    this._songQueue = [];
+    this._songStream = null;
+    this._volume = null;
+    this._speaker = null;
+    this._ongoingSay = 0;     // Measures number of ongoing calls to `say`
+    
+    // Set a default voice
     if (typeof voiceName === "undefined" || voiceName === null) {
       if (process.platform === "darwin") {
         this._voiceName = "Alex";
@@ -28,17 +42,21 @@ class AudioOut {
         this._voiceName = null;
       }
     }
-
-    this._songQueue = [];
-    this._songStream = null;
-    this._volume = null;
-    this._speaker = null;
     this.log.info("AudioOut driver initialized");
+
   }
 
   /********************************
    * PUBLIC METHODS
    ********************************/
+
+  /**
+   * Checks if the driver is started
+   * @return {boolean}
+   **/
+  isRunning() {
+    return true;
+  }
 
   /**
    * Start the driver.
@@ -82,16 +100,21 @@ class AudioOut {
    **/
   say(phrase) {
     this.log.info("AudioOut.say(" + phrase + ")");
-    return new Promise(function(phrase1, resolve, reject) {
-      // (phrase, voiceName, speed, callback)
-      say.speak(phrase1, this._voiceName, 1.0, function(resolve2, reject2, err) {
-        this.log.debug("AudioOut.say() finished");
-        if (err) {
-          reject2();
-        }
-        resolve2();
-      }.bind(this, resolve, reject));
-    }.bind(this, phrase));
+    this._ongoingSay++;
+    this._emitAudioEvt();
+    // (phrase, voiceName, speed, callback)
+    return Q.nfapply(say.speak, [ phrase, this._voiceName, 1.0 ]).then(() => {
+      this.log.debug("AudioOut.say() finished");
+      this.emit("audio", false);
+      this._ongoingSay--;
+      this._emitAudioEvt();
+      return Promise.resolve();
+    }).catch((err) => {
+      this.log.debug("AudioOut.say() errored: " + JSON.stringify(err));
+      this._ongoingSay--;
+      this._emitAudioEvt();
+      return Promise.reject(err);
+    });
   }
 
   /**
@@ -189,7 +212,9 @@ class AudioOut {
     this._songStream
       .pipe(this._volume)
       .pipe(this._speaker)
-      .once("close", () => {});
+      .once("close", this._onSongDone.bind(this));
+    // Emit an event
+    this._emitAudioEvt();
   }
 
   /**
@@ -206,6 +231,8 @@ class AudioOut {
       //this._speaker.end();
       this._speaker = null;
     }
+    // Emit an event
+    this._emitAudioEvt();
   }
 
   /**
@@ -223,7 +250,10 @@ class AudioOut {
     this._songStream
       .pipe(this._volume)
       .pipe(this._speaker)
-      .once("close", () => {});
+      .once("close",  this._onSongDone.bind(this)};
+
+    // Emit an event
+    this._emitAudioEvt();
   }
 
 
@@ -231,9 +261,16 @@ class AudioOut {
    * PRIVATE METHODS
    ********************************/
 
+  _emitAudioEvt() {
+    let msg = (this._ongoingSay > 0)|| this.isPlaying();
+    this.log.verbose("AudioOut emits audio:" + msg);
+    this.emit("audio", msg);
+  }
+
   _onSongDone() {
-    //this.log.info("AudioOut._onSongDone()");
-    //@todo this is triggered on pause
+    this.log.info("AudioOut._onSongDone()");
+    // Emit an event
+    this._emitAudioEvt();
   }
 
 }

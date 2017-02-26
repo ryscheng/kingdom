@@ -38,6 +38,14 @@ class WebService {
    ********************************/
 
   /**
+   * Checks if the driver is started
+   * @return {boolean}
+   **/
+  isRunning() {
+    return this._server.listening;
+  }
+
+  /**
    * Start the driver.
    * Starts listening on the configured port
    * @return {Promise} resolves when done

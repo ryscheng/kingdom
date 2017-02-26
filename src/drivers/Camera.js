@@ -38,12 +38,23 @@ class Camera extends EventEmitter {
    ********************************/
 
   /**
+   * Checks if the driver is started
+   **/
+  isRunning() {
+    return this._intervalIds.length > 0;
+  }
+
+  /**
    * Start the driver.
    * Starts fetching camera frames
    * @return {Promise} resolves when done
    **/
   start() {
     this.log.info("Camera.start()");
+    if (this.isRunning()) {
+      this.log.verbose("Camera already started");
+      return Promise.resolve();
+    }
     this._intervalIds.push(setInterval(this._readImage.bind(this), CAMERA_INTERVAL));
     this._intervalIds.push(setInterval(this._checkMotion.bind(this), CHECK_INTERVAL));
     return Promise.resolve();
