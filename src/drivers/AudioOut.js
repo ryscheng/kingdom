@@ -250,7 +250,7 @@ class AudioOut extends EventEmitter {
     this._songStream
       .pipe(this._volume)
       .pipe(this._speaker)
-      .once("close",  this._onSongDone.bind(this)};
+      .once("close", this._onSongDone.bind(this));
 
     // Emit an event
     this._emitAudioEvt();

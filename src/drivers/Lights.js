@@ -58,7 +58,7 @@ class Lights {
       if (err.type === 1) {
         this.log.info("Please go and press the link button on your base station(s)");
         return Q.npost(this._client, "register", []);
-      } 
+      }
       return Promise.reject(err);
     });
   }

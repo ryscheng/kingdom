@@ -93,7 +93,7 @@ class SpeechIn extends EventEmitter {
    **/
   stop() {
     this.log.info("SpeechIn.stop()");
-    if (this._process !== null) { 
+    if (this._process !== null) {
       this._process.kill();
       this._process = null;
     }

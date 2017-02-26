@@ -23,6 +23,7 @@ class Camera extends EventEmitter {
   constructor() {
     super();
     // Private variables
+    this.log = winston.loggers.get("drivers");
     this._camera = new cv.VideoCapture(0);
     //this._window = new cv.NamedWindow('Video', 0)
     this._intervalIds = [];

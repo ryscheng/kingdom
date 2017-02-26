@@ -6,7 +6,7 @@ const winston = require("winston");
 
 const TIMEOUT = 10000;
 const THRESHOLD = -6000;
-const RESPONSE_MSG = "how can I help you?";
+//const RESPONSE_MSG = "how can I help you?";
 
 class SpeakInterface extends EventEmitter {
   constructor(speechIn, audioOut) {
