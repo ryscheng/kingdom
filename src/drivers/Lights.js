@@ -136,6 +136,10 @@ class Lights {
     return this._huebroadcast("off", []);
   }
 
+  /**
+   * Blink lights
+   **/
+
   
   /********************************
    * PRIVATE METHODS

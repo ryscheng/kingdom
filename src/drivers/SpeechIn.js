@@ -183,7 +183,7 @@ class SpeechIn extends EventEmitter {
   _onClose(code) {
     this.log.warn("pocketsphinx process closed with code=" + code);
     // Restart everything after a short delay
-    setTimeout(this.restart.bind(this), RESTART_DELAY);
+    //setTimeout(this.restart.bind(this), RESTART_DELAY);
   }
 
 }
