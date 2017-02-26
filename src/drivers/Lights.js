@@ -66,12 +66,13 @@ class Lights {
   }
 
   /**
-   *
+   * Gets the global state of all lights from the Hue bridge and caches it
    * @return {Object.<string, Object>} name -> {
    *  on: bool    // light is on/off
    * }
    **/
   getState() {
+    this.log.verbose("Lights.getState()");
     return Q.ninvoke(this._client, "lights").then((result) => {
       let ret = {};
       this._cacheLights = result;
@@ -82,23 +83,48 @@ class Lights {
           };
         }
       }
+      this.log.verbose("Lights.getState() resolves");
       return Promise.resolve(ret);
     });
   }
 
+  /**
+   * Turn on a specific light by name
+   * Get all lights from `getState()`
+   * @param {string} name - name of a single light
+   * @return {Promise} resolves when done
+   **/
   turnOn(name) {
+    this.log.info("Lights.turnOn(" + name + ")");
     return this._huecall("on", name, []);
   }
 
+  /**
+   * Turn off a specific light by name
+   * Get all lights from `getState()`
+   * @param {string} name - name of a single light
+   * @return {Promise} resolves when done
+   **/
   turnOff(name) {
+    this.log.info("Lights.turnOff(" + name + ")");
     return this._huecall("off", name, []);
   }
-
+  
+  /**
+   * Turn on all lights
+   * @return {Promise} resolves when done
+   **/
   allOn() {
+    this.log.info("Lights.allOn()");
     return this._huebroadcast("on", []);
   }
 
+  /**
+   * Turn off all lights
+   * @return {Promise} resolves when done
+   **/
   allOff() {
+    this.log.info("Lights.allOff()");
     return this._huebroadcast("off", []);
   }
 
@@ -107,6 +133,14 @@ class Lights {
    * PRIVATE METHODS
    ********************************/
 
+  /**
+   * Call a single method on the hue.js library
+   * See here for more info (https://www.npmjs.com/package/hue.js)
+   * @param {string} method - name of the method to call
+   * @param {string} name - name of the light to configure
+   * @param {Array.<string>} - array of additional arguments to pass to hue.js
+   * @return {Promise} resolves when done
+   **/
   _huecall(method, name, args) {
     for (let k in this._cacheLights) {
       if (this._cacheLights.hasOwnProperty(k) && this._cacheLights[k].name === name) {
@@ -115,6 +149,13 @@ class Lights {
     }
   }
 
+  /**
+   * Call a method on all light bulbs
+   * See here for more info (https://www.npmjs.com/package/hue.js)
+   * @param {string} method - name of the method to call
+   * @param {Array.<string>} - array of additional arguments to pass to hue.js
+   * @return {Promise} resolves when all calls are done
+   **/
   _huebroadcast(method, args) {
     let promises = [];
     for (let k in this._cacheLights) {

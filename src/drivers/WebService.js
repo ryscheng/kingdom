@@ -2,7 +2,6 @@
 
 const winston = require("winston");
 const Q = require("q");
-const EventEmitter = require("events");
 const path = require("path");
 const cv = require("opencv");
 const express = require("express");
@@ -13,14 +12,13 @@ const socketio = require("socket.io");
  * Class representing the WebService driver
  * In order to present a unified web interface, plugins can register routes with this centralized service
  **/
-class WebService extends EventEmitter {
+class WebService {
 
   /**
    * Create a new WebService driver
    * @param {number} port - port for HTTP server to listen on
    **/
   constructor(port) {
-    super();
     // Private variables
     this.log = winston.loggers.get("drivers");
     this._port = port;
@@ -104,7 +102,6 @@ class WebService extends EventEmitter {
           //console.log(im.size())
           //im.save("./stream/image_stream.jpg")
           this._latestImage = im;
-          this.emit("image", im);
           this._io.sockets.emit("liveStream", "/cam/image_stream.jpg?_t=" + (Math.random() * 100000));
         });
       }, 200);

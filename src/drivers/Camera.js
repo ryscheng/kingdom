@@ -11,6 +11,9 @@ const CHECK_INTERVAL = 500;
  * Class representing the Camera driver
  * Single place for interacting with the camera to conserve resources
  * Intelligently adjusts rate based on motion
+ *
+ * Events:
+ * - ''
  **/
 class Camera extends EventEmitter {
 
