@@ -1,6 +1,7 @@
 ### Scrap
 .*.swp
 npm-debug.log
+input.wav
 
 ### Project
 build/

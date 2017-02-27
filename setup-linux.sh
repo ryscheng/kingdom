@@ -47,6 +47,9 @@ aptInstall libopencv-dev
 # audio players
 #aptInstall mplayer mpg321 ffmpeg
 
+# clap-detector (npm)
+aptInstall sox
+
 # pocketsphinx dependencies
 aptInstall cmake gcc g++ automake autoconf libtool pkg-config bison python python-all-dev libpcre3-dev
 npmInstall cmake-js cmake-js

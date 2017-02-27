@@ -1,5 +1,7 @@
 "use strict";
 
+const clapDetector = require("clap-detector");
+
 /**
  * MusicControl plugin
  * Sets up utterances and intents for controlling the music
@@ -73,6 +75,22 @@ class MusicControl {
       "what is the next song": this.nextSong.bind(this),
     };
     **/
+
+    clapDetector.start({
+      AUDIO_SOURCE: 'coreaudio default', // this is your microphone input. 
+      DETECTION_PERCENTAGE_START : '5%', // minimum noise percentage threshold necessary to start recording sound
+      DETECTION_PERCENTAGE_END: '5%',  // minimum noise percentage threshold necessary to stop recording sound
+      CLAP_AMPLITUDE_THRESHOLD: 0.7, // minimum amplitude threshold to be considered as clap
+      CLAP_ENERGY_THRESHOLD: 0.3,  // maximum energy threshold to be considered as clap
+      MAX_HISTORY_LENGTH: 10 // all claps are stored in history, this is its max length
+    });
+    clapDetector.onClaps(3, 2000, this._onClap.bind(this));
+    //clapDetector.onClap(this._onClap.bind(this));
+  }
+
+  _onClap(delay) {
+    console.log("!!!");
+    this.stop();
   }
 
   /**

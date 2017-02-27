@@ -5,8 +5,9 @@ const config = require("config");
 const winston = require("winston");
 
 const TIMEOUT = 10000;
-const THRESHOLD = -6000;
-const PERIODIC_INTERVAL = 60000;
+const SCORE_THRESHOLD = -6000;
+const RESTART_THRESHOLD = 5;
+const PERIODIC_INTERVAL = 600000; // 10 min
 //const RESPONSE_MSG = "how can I help you?";
 
 class SpeakInterface extends EventEmitter {
@@ -21,6 +22,7 @@ class SpeakInterface extends EventEmitter {
     this._readyUntil = Date.now();
     this._periodicId = null;
     this._audioOn = false;
+    this._poorScoreCount = 0;
     // Event handlers
     this._periodicId = setInterval(this._periodic.bind(this), PERIODIC_INTERVAL);
     this._audioOut.on("audio", this._onAudioChange.bind(this));
@@ -44,22 +46,34 @@ class SpeakInterface extends EventEmitter {
    * PRIVATE METHODS
    ********************************/
 
+  _resetPocketsphinx() {
+    this._poorScoreCount = 0;
+    this._speechIn.restart();
+  }
+
   _periodic() {
     this.log.info("SpeakInterface periodic function running...");
-    // Only restart if the audio isn't playing
-    if (!this._audioOn) {
-      this._speechIn.restart();
+
+    // if music is playing, stop the speech recognition
+    if (this._speechIn.isRunning() && this._audioOut.isPlaying()) {
+      this.log.info("Stopping SpeechIn, music playing");
+      this._speechIn.stop();
+    // if the music is off, start the speech recognition
+    } else if (!this._speechIn.isRunning() && !this._audioOut.isPlaying()) {
+      this.log.info("Starting SpeechIn, no music");
+      this._resetPocketsphinx();
+    // if we haven't seen good scores in a while
+    } else if (this._speechIn.isRunning() && this._poorScoreCount > RESTART_THRESHOLD) {
+      this.log.info("Restarting SpeechIn, haven't seen a good recognition in " + this._poorScoreCount + " tries");
+      this._resetPocketsphinx();
     }
+
   }
 
   _onAudioChange(audio) {
     this.log.info("SpeakInterface sees that audio:" + audio);
     this._audioOn = audio;
-    if (audio === true && this._speechIn.isRunning()) {
-      this._speechIn.stop();
-    } else if (audio === false && !this._speechIn.isRunning()) {
-      this._speechIn.start();
-    }
+    this._periodic();
   }
 
   _indicateReady() {
@@ -73,7 +87,8 @@ class SpeakInterface extends EventEmitter {
 
   _onCommand(command) {
     this.log.debug(JSON.stringify(command));
-    if (command.score > THRESHOLD) {
+    if (command.score > SCORE_THRESHOLD) {
+      this._poorScoreCount = 0;
       if (this._keyphrases.indexOf(command.line) > -1) {
         this._readyUntil = Date.now() + TIMEOUT;
         this._indicateReady();
@@ -87,6 +102,8 @@ class SpeakInterface extends EventEmitter {
           this.log.verbose("Not currently listening for commands");
         }
       }
+    } else {
+      this._poorScoreCount++;
     }
   }
 

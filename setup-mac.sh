@@ -7,5 +7,8 @@ function brewInstall {
 	fi
 }
 
+# opencv
 brewInstall pkg-config pkgconfig
 brewInstall opencv_version homebrew/science/opencv
+# clap-detector
+brewInstall sox sox

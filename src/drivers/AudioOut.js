@@ -262,7 +262,7 @@ class AudioOut extends EventEmitter {
    ********************************/
 
   _emitAudioEvt() {
-    let msg = (this._ongoingSay > 0)|| this.isPlaying();
+    let msg = (this._ongoingSay > 0) || this.isPlaying();
     this.log.verbose("AudioOut emits audio:" + msg);
     this.emit("audio", msg);
   }
