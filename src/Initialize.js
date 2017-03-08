@@ -32,12 +32,14 @@ function initDrivers() {
   const Lights = require("./drivers/Lights");
   const AudioOut = require("./drivers/AudioOut");
   const SpeechIn = require("./drivers/SpeechIn");
+  const ClapDetector = require("./drivers/ClapDetector");
   //const Camera = require("./drivers/Camera");
 
   return {
     "lights": new Lights(config.get("app.name"), config.get("hue.addr")),
     "audioOut": new AudioOut(),
     "speechIn": new SpeechIn(config.get("pocketsphinx")),
+    "clapDetector": new ClapDetector(config.get("clapDetector.deviceName")),
   };
 }
 
@@ -49,7 +51,7 @@ function initPlugins(drivers) {
   
   return {
     "lightControl": new LightControl(drivers.lights),
-    "musicControl": new MusicControl(drivers.audioOut),
+    "musicControl": new MusicControl(drivers.audioOut, drivers.clapDetector),
     "hypeMachine": new HypeMachine(drivers.audioOut, config.get("hypem.username")),
     "weather": new Weather(),
   };

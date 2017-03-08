@@ -2,7 +2,7 @@
 
 const EventEmitter = require("events");
 const say = require("say");
-const espeak = require("node-espeak");
+const espeak = require("espeak");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 const winston = require("winston");
@@ -264,12 +264,20 @@ class AudioOut extends EventEmitter {
    * PRIVATE METHODS
    ********************************/
 
+  /**
+   * Emits event updating audio state
+   * True if either music playing or TTS active
+   * False if silent
+   **/
   _emitAudioEvt() {
     let msg = (this._ongoingSay > 0) || this.isPlaying();
     this.log.verbose("AudioOut emits audio:" + msg);
     this.emit("audio", msg);
   }
 
+  /**
+   * Triggered when song finishes playing
+   **/
   _onSongDone() {
     this.log.info("AudioOut._onSongDone()");
     // Emit an event
@@ -279,4 +287,3 @@ class AudioOut extends EventEmitter {
 }
 
 module.exports = AudioOut;
-

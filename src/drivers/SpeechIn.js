@@ -4,7 +4,7 @@ const winston = require("winston");
 const ChildProcess = require("child_process");
 const EventEmitter = require("events");
 
-const RESTART_DELAY = 100;  // milliseconds
+//const RESTART_DELAY = 100;  // milliseconds
 const SCORE_SELECTOR = "Bestpath score";
 const NORMALIZER_SELECTOR = "Normalizer P(O)";
 const JOINT_SELECTOR = "Joint P(O,S)";
@@ -37,12 +37,7 @@ class SpeechIn extends EventEmitter {
     this._process = null;
 
     this._resetCurrent();
-    // For some reason, child processes aren't automatically killed on Mac OS X
-    process.on("exit", () => {
-      if (this._process !== null) {
-        this._process.kill();
-      }
-    });
+
     this.log.info("SpeechIn driver initialized");
   }
 
@@ -75,7 +70,8 @@ class SpeechIn extends EventEmitter {
       "-inmic", "yes",
       "-samprate", "16000/8000/48000",
     ];
-    if (this._pocketsphinxOpts.device !== "" && 
+    // Use default device unless specified
+    if (this._pocketsphinxOpts.device !== "" &&
        this._pocketsphinxOpts.device !== null &&
        typeof this._pocketsphinxOpts.device !== "undefined") {
       opts = opts.concat([ "-adcdev", this._pocketsphinxOpts.device ]);

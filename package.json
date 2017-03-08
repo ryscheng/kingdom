@@ -37,6 +37,7 @@
   "dependencies": {
     "clap-detector": "^0.4.1",
     "config": "^1.25.1",
+    "espeak": "0.0.3",
     "express": "^4.14.1",
     "google-auth-library": "^0.10.0",
     "google-cloud": "^0.46.2",
@@ -48,7 +49,6 @@
     "mic": "^2.1.1",
     "multipipe": "^1.0.2",
     "needle": "^1.4.5",
-    "node-espeak": "^0.2.1",
     "opencv": "^6.0.0",
     "pcm-volume": "^1.0.0",
     "q": "~1.4.1",

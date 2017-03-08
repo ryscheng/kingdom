@@ -6,8 +6,8 @@
   "hue": {
     "addr": ""
   },
-  "hypem": {
-    "username": ""
+  "clapDetector": {
+    "deviceName": ""
   },
   "pocketsphinx": {
     "bin": "",
@@ -26,5 +26,8 @@
       "authorizedUsers": [],
       "topic": ""
     }
+  },
+  "hypem": {
+    "username": ""
   }
 }

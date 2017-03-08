@@ -1,6 +1,6 @@
 "use strict";
 
-const clapDetector = require("clap-detector");
+const winston = require("winston");
 
 /**
  * MusicControl plugin
@@ -13,9 +13,11 @@ class MusicControl {
    * Instantiates the plugin
    * @param {AudioOut} audioOut - driver
    **/
-  constructor(audioOut) {
+  constructor(audioOut, claps) {
     // Private variables
+    this.log = winston.loggers.get("plugins");
     this._audioOut = audioOut;  // AudioOut driver
+    this._claps = claps;        // Claps driver
 
     // Plugin properties
     this.name = "Music Control";
@@ -76,21 +78,17 @@ class MusicControl {
     };
     **/
 
-    clapDetector.start({
-      //AUDIO_SOURCE: 'coreaudio default', // this is your microphone input. 
-      AUDIO_SOURCE: 'alsa default', // this is your microphone input. 
-      DETECTION_PERCENTAGE_START : '5%', // minimum noise percentage threshold necessary to start recording sound
-      DETECTION_PERCENTAGE_END: '5%',  // minimum noise percentage threshold necessary to stop recording sound
-      CLAP_AMPLITUDE_THRESHOLD: 0.7, // minimum amplitude threshold to be considered as clap
-      CLAP_ENERGY_THRESHOLD: 0.3,  // maximum energy threshold to be considered as clap
-      MAX_HISTORY_LENGTH: 10 // all claps are stored in history, this is its max length
-    });
-    clapDetector.onClaps(3, 2000, this._onClap.bind(this));
+    this._claps.onClaps(3, 2000, this._onClap.bind(this));
     //clapDetector.onClap(this._onClap.bind(this));
   }
 
+  /**
+   * Handler for clap sequence
+   * Triggers music to stop
+   * @param {number} delay
+   **/
   _onClap(delay) {
-    console.log("!!!");
+    this.log.info("MusicControl._onClap: clap sequence triggered");
     this.stop();
   }
 
@@ -113,7 +111,7 @@ class MusicControl {
    *
    **/
   play() {
-    console.log("MusicControl.play()");
+    this.log.info("MusicControl.play()");
     if (this._audioOut.getSongQueue().length <= 0) {
       return Promise.resolve("please queue up some songs first");
     }
@@ -126,7 +124,7 @@ class MusicControl {
   }
 
   stop() {
-    console.log("MusicControl.stop()");
+    this.log.info("MusicControl.stop()");
     if (!this._audioOut.isPlaying()) {
       return Promise.resolve("no music is playing");
     }
@@ -135,7 +133,7 @@ class MusicControl {
   }
   
   pause() {
-    console.log("MusicControl.pause()");
+    this.log.info("MusicControl.pause()");
     if (!this._audioOut.isPlaying()) {
       return Promise.resolve("no music is playing");
     }
@@ -147,7 +145,7 @@ class MusicControl {
   }
 
   resume() {
-    console.log("MusicControl.resume()");
+    this.log.info("MusicControl.resume()");
     if (!this._audioOut.isPaused()) {
       return Promise.resolve("nothing to resume");
     }
@@ -156,7 +154,7 @@ class MusicControl {
   }
 
   next() {
-    console.log("MusicControl.next()");
+    this.log.info("MusicControl.next()");
     if (this._audioOut.getSongQueue().length <= 1) {
       return Promise.resolve("no more songs");
     }
@@ -168,7 +166,7 @@ class MusicControl {
   }
   
   repeat() {
-    console.log("MusicControl.again()");
+    this.log.info("MusicControl.again()");
     this._audioOut.stop();
     this._audioOut.play();
     return Promise.resolve("Done");
@@ -176,18 +174,18 @@ class MusicControl {
   
   previous() {
     //@todo (need to restructure away from queues)
-    console.log("MusicControl.previous()");
+    this.log.info("MusicControl.previous()");
     return Promise.resolve("this feature is not ready yet");
   }
 
   clear() {
-    console.log("MusicControl.clear()");
+    this.log.info("MusicControl.clear()");
     this._audioOut.clearSongQueue();
     return Promise.resolve("Done");
   }
 
   nextSong() {
-    console.log("MusicControl.nextSong()");
+    this.log.info("MusicControl.nextSong()");
     let queue = this._audioOut.getSongQueue();
     let response;
     if (queue.length > 0) {
