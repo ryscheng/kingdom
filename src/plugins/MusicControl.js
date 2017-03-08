@@ -77,7 +77,8 @@ class MusicControl {
     **/
 
     clapDetector.start({
-      AUDIO_SOURCE: 'coreaudio default', // this is your microphone input. 
+      //AUDIO_SOURCE: 'coreaudio default', // this is your microphone input. 
+      AUDIO_SOURCE: 'alsa default', // this is your microphone input. 
       DETECTION_PERCENTAGE_START : '5%', // minimum noise percentage threshold necessary to start recording sound
       DETECTION_PERCENTAGE_END: '5%',  // minimum noise percentage threshold necessary to stop recording sound
       CLAP_AMPLITUDE_THRESHOLD: 0.7, // minimum amplitude threshold to be considered as clap

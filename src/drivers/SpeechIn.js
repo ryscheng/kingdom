@@ -68,14 +68,19 @@ class SpeechIn extends EventEmitter {
       this.log.verbose("SpeechIn already runnning");
       return Promise.resolve();
     }
-    this._process = ChildProcess.spawn(this._pocketsphinxOpts.bin, [
+    let opts = [
       "-hmm", this._pocketsphinxOpts.hmm,
       "-lm", this._pocketsphinxOpts.lm,
       "-dict", this._pocketsphinxOpts.dict,
-      "-adcdev", this._pocketsphinxOpts.device,
       "-inmic", "yes",
       "-samprate", "16000/8000/48000",
-    ], { "detached": false });
+    ];
+    if (this._pocketsphinxOpts.device !== "" && 
+       this._pocketsphinxOpts.device !== null &&
+       typeof this._pocketsphinxOpts.device !== "undefined") {
+      opts = opts.concat([ "-adcdev", this._pocketsphinxOpts.device ]);
+    }
+    this._process = ChildProcess.spawn(this._pocketsphinxOpts.bin, opts, { "detached": false });
 
     this._process.stdout.on("data", this._onStdout.bind(this));
     this._process.stderr.on("data", this._onStderr.bind(this));
