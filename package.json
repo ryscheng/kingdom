@@ -48,6 +48,7 @@
     "mic": "^2.1.1",
     "multipipe": "^1.0.2",
     "needle": "^1.4.5",
+    "node-espeak": "^0.2.1",
     "opencv": "^6.0.0",
     "pcm-volume": "^1.0.0",
     "q": "~1.4.1",

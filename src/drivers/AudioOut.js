@@ -2,6 +2,7 @@
 
 const EventEmitter = require("events");
 const say = require("say");
+const espeak = require("node-espeak");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 const winston = require("winston");
@@ -100,6 +101,7 @@ class AudioOut extends EventEmitter {
    **/
   say(phrase) {
     this.log.info("AudioOut.say(" + phrase + ")");
+    /**
     this._ongoingSay++;
     this._emitAudioEvt();
     // (phrase, voiceName, speed, callback)
@@ -115,6 +117,7 @@ class AudioOut extends EventEmitter {
       this._emitAudioEvt();
       return Promise.reject(err);
     });
+    **/
   }
 
   /**
