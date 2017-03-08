@@ -1,12 +1,15 @@
 "use strict";
 
 const EventEmitter = require("events");
-const say = require("say");
-const espeak = require("espeak");
+//const espeak = require("espeak");
+//const say = require("say");           // For a list of available voices, see https://www.npmjs.com/package/say
+const ChildProcess = require("child_process");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 const winston = require("winston");
 const Q = require("q");
+
+const ESPEAK_CMD = "espeak";
 
 /**
  * Class representing the AudioOut driver
@@ -19,7 +22,6 @@ class AudioOut extends EventEmitter {
 
   /**
    * Create an AudioOut driver
-   * For a list of available voices, see https://www.npmjs.com/package/say
    * If this parameter is not specified, will use system defaults
    * @param {string} voiceName - name of the speaker's voice.
    **/
@@ -101,23 +103,25 @@ class AudioOut extends EventEmitter {
    **/
   say(phrase) {
     this.log.info("AudioOut.say(" + phrase + ")");
-    /**
     this._ongoingSay++;
     this._emitAudioEvt();
-    // (phrase, voiceName, speed, callback)
-    return Q.nfapply(say.speak, [ phrase, this._voiceName, 1.0 ]).then(() => {
-      this.log.debug("AudioOut.say() finished");
-      this.emit("audio", false);
-      this._ongoingSay--;
-      this._emitAudioEvt();
-      return Promise.resolve();
-    }).catch((err) => {
-      this.log.debug("AudioOut.say() errored: " + JSON.stringify(err));
-      this._ongoingSay--;
-      this._emitAudioEvt();
-      return Promise.reject(err);
+
+    return new Promise((resolve, reject) => {
+      let process = ChildProcess.spawn(ESPEAK_CMD, [ phrase ], { "detached": false });
+      //process.stdout.on("data", () => {});
+      //process.stderr.on("data", () => {});
+      //process.on("close", this._onClose.bind(this));
+      //process.on("error", this._onClose.bind(this));
+      process.on("exit", function(resolve) {
+        this.log.debug("AudioOut.say() finished");
+        this._ongoingSay--;
+        this._emitAudioEvt();
+        return resolve();
+      }.bind(this, resolve));
     });
-    **/
+    // (phrase, voiceName, speed, callback)
+    //return Q.nfapply(say.speak, [ phrase, this._voiceName, 1.0 ]).then(() => {});
+    //return Q.nfapply(espeak.speak, [ phrase ]).then((wav) => {});
   }
 
   /**
