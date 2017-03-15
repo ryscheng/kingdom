@@ -4,8 +4,8 @@ const winston = require("winston");
 const cv = require("opencv");
 const EventEmitter = require("events");
 
-const CAMERA_INTERVAL = 20;
-const CHECK_INTERVAL = 500;
+const LIVEFEED_INTERVAL = 20;
+const MOTIONCHECK_INTERVAL = 1000;
 
 /**
  * Class representing the Camera driver
@@ -13,7 +13,7 @@ const CHECK_INTERVAL = 500;
  * Intelligently adjusts rate based on motion
  *
  * Events:
- * - ''
+ * - "frame": OpenCV.Matrix  // An image read from webcam using opencv
  **/
 class Camera extends EventEmitter {
 
@@ -25,8 +25,9 @@ class Camera extends EventEmitter {
     // Private variables
     this.log = winston.loggers.get("drivers");
     this._camera = new cv.VideoCapture(0);
-    //this._window = new cv.NamedWindow('Video', 0)
-    this._intervalIds = [];
+    this._window = new cv.NamedWindow('Video', 0)
+    this._running = false;
+    this._scheduled = 0;
     this._prevImg = null;
     this._currImg = null;
     this._nextImg = null;
@@ -42,7 +43,7 @@ class Camera extends EventEmitter {
    * Checks if the driver is started
    **/
   isRunning() {
-    return this._intervalIds.length > 0;
+    return this._running;
   }
 
   /**
@@ -52,49 +53,76 @@ class Camera extends EventEmitter {
    **/
   start() {
     this.log.info("Camera.start()");
+    // Check if already running
     if (this.isRunning()) {
       this.log.verbose("Camera already started");
       return Promise.resolve();
     }
-    this._intervalIds.push(setInterval(this._readImage.bind(this), CAMERA_INTERVAL));
-    this._intervalIds.push(setInterval(this._checkMotion.bind(this), CHECK_INTERVAL));
+    // Start periodic reads
+    this._running = true; 
+    this._scheduleRead();
     return Promise.resolve();
   }
 
    /**
    * Stops the driver.
-   * Stops all periodic callbacks
+   * Should trigger all periodic callbacks to stop
    * @return {Promise} resolves when done
    **/
   stop() {
     this.log.info("Camera.stop()");
-    this._intervalIds.forEach((id) => {
-      clearInterval(id);
-    });
-    this._intervalIds = [];
+    this._running = false;
   }
 
   /********************************
    * PRIVATE METHODS
    ********************************/
+
+  _scheduleRead() {
+    // Ignore if there's another callback already scheduled
+    if (this._scheduled > 0) {
+      return;
+    }
+
+    this._scheduled += 1;
+
+    if (this._prevImg === null ||
+       this._currImg === null ||
+       this._nextImg === null) {
+      setTimeout(this._readImage.bind(this), LIVEFEED_INTERVAL);
+    } else if (this._checkMotion() === true) {
+      setTimeout(this._readImage.bind(this), LIVEFEED_INTERVAL);
+    } else {
+      setTimeout(this._readImage.bind(this), MOTIONCHECK_INTERVAL);
+    }
+  }
+
   // @TODO docs and logging
   _readImage() {
+    this._scheduled -= 1;
+    // Just ignore if user asked to stop
+    if (this._running === false) {
+      return;
+    }
+    console.log("Read");
+
     this._camera.read((err, im) => {
       if (err) {
+        this.log.error(err);
         throw err;
       }
-      im.convertGrayscale();
+      console.log("got image");
       this._prevImg = this._currImg;
       this._currImg = this._nextImg;
       this._nextImg = im;
+
+      this._scheduleRead();
       
       // SHOW
-      /**
       if (im.size()[0] > 0 && im.size()[1] > 0){
         this._window.show(im);
       }
       this._window.blockingWaitKey(0, 50);
-      **/
     });
   }
 
@@ -102,11 +130,18 @@ class Camera extends EventEmitter {
     if (this._prevImg === null ||
        this._currImg === null ||
        this._nextImg === null) {
-      return;
+      return false;
     }
 
+    if (cv.ImageSimilarity === undefined) {
+      console.log('TODO: Please port Features2d.cc to OpenCV 3')
+      process.exit(0);
+    }
     /**
-    cv.ImageSimilarity(this._nextImg, this._currImg, (err, result) => {
+    cv.ImageSimilarity(
+        this._nextImg.convertGrayscale(),
+        this._currImg.convertGrayscale(),
+        (err, result) => {
       console.log("!!!!")
       console.log(err);
       console.log(result);
