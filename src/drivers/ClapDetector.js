@@ -1,5 +1,7 @@
 "use strict";
 
+const EventEmitter = require("events");
+const winston = require("winston");
 const clapDetector = require("clap-detector");
 
 /**
@@ -16,6 +18,8 @@ class ClapDetector extends EventEmitter {
    * @param {string} device - name of the device for `sox`
    **/
   constructor(device) {
+    super();
+    this.log = winston.loggers.get("drivers");
     this._deviceName = device;
     this._running = false;
   }
@@ -56,7 +60,7 @@ class ClapDetector extends EventEmitter {
     });
 
     // Register a clap detector
-    clapDetector.onClap(this._onClap.bind(this))
+    //clapDetector.onClap(this._onClap.bind(this))
 
     return Promise.resolve();
   }
@@ -69,6 +73,11 @@ class ClapDetector extends EventEmitter {
   stop() {
     this.log.info("ClapDetector.stop()");
     return Promise.resolve();
+  }
+
+  onClaps(num, time, cb) {
+    this.log.info("ClapDetector.onClaps(" + num + ", " + time + ", cb) registered");
+    clapDetector.onClaps(num, time, cb);
   }
 
   /********************************

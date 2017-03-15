@@ -40,7 +40,7 @@ function initDrivers() {
     "audioOut": new AudioOut(),
     "speechIn": new SpeechIn(config.get("pocketsphinx")),
     "clapDetector": new ClapDetector(config.get("clapDetector.deviceName")),
-    "camera": new Camera(),
+    //"camera": new Camera(),
   };
 }
 

@@ -52,7 +52,7 @@ class SpeakInterface extends EventEmitter {
   }
 
   _periodic() {
-    this.log.info("SpeakInterface periodic function running...");
+    this.log.info("SpeakInterface periodic function running: running=" + this._speechIn.isRunning() + ",audio=" + this._audioOut.isPlaying() + ",poorScoreCount=" + this._poorScoreCount);
 
     // if music is playing, stop the speech recognition
     if (this._speechIn.isRunning() && this._audioOut.isPlaying()) {
