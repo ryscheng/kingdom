@@ -93,6 +93,9 @@ class AudioOut extends EventEmitter {
       this._speaker.end();
       this._speaker = null;
     }
+
+    // Emit an event
+    this._emitAudioEvt();
     return Promise.resolve();
   }
 
@@ -284,8 +287,7 @@ class AudioOut extends EventEmitter {
    **/
   _onSongDone() {
     this.log.info("AudioOut._onSongDone()");
-    // Emit an event
-    this._emitAudioEvt();
+    this.stop();
   }
 
 }
