@@ -8,7 +8,7 @@ const TIMEOUT = 10000;
 const SCORE_THRESHOLD = -6000;
 const RESTART_THRESHOLD = 5;
 const PERIODIC_INTERVAL = 600000; // 10 min
-//const RESPONSE_MSG = "how can I help you?";
+const RESPONSE_MSG = "sup";
 
 class SpeakInterface extends EventEmitter {
   constructor(speechIn, audioOut, lights) {
@@ -78,7 +78,7 @@ class SpeakInterface extends EventEmitter {
 
   _indicateReady() {
     this.log.info("SpeakInterface: Waiting for command");
-    //this._audioOut.say(RESPONSE_MSG);
+    this._audioOut.say(RESPONSE_MSG);
     if (this._lights !== null && typeof this._lights !== "undefined") {
       // @TODO some other kind of indicator
       //this._lights.blink();

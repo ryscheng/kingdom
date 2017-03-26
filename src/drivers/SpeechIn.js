@@ -69,6 +69,7 @@ class SpeechIn extends EventEmitter {
       "-dict", this._pocketsphinxOpts.dict,
       "-inmic", "yes",
       "-samprate", "16000/8000/48000",
+      "-vad_threshold", "3.5",
     ];
     // Use default device unless specified
     if (this._pocketsphinxOpts.device !== "" &&

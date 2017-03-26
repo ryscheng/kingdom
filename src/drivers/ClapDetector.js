@@ -1,6 +1,7 @@
 "use strict";
 
 const EventEmitter = require("events");
+const ChildProcess = require("child_process");
 const winston = require("winston");
 const clapDetector = require("clap-detector");
 
@@ -72,6 +73,7 @@ class ClapDetector extends EventEmitter {
    **/
   stop() {
     this.log.info("ClapDetector.stop()");
+    ChildProcess.spawn("killall", [ "sox" ], { "detached": false });
     return Promise.resolve();
   }
 
