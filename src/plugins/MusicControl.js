@@ -40,6 +40,15 @@ class MusicControl {
           "clear playlist",
         ],
       },
+      "shuffle": {
+        "name": "shuffle",
+        "description": "Shuffle playlist",
+        "callback": this.shuffle.bind(this),
+        "parameters": [],
+        "utterances": [
+          "shuffle playlist",
+        ],
+      },
       "control": {
         "name": "control",
         "description": "Control music playback",
@@ -88,7 +97,7 @@ class MusicControl {
    * @param {number} delay
    **/
   _onClap(delay) {
-    this.log.info("MusicControl._onClap: clap sequence triggered");
+    this.log.info("MusicControl._onClap: clap sequence triggered, delay=" + delay);
     this.stop();
   }
 
@@ -181,6 +190,18 @@ class MusicControl {
   clear() {
     this.log.info("MusicControl.clear()");
     this._audioOut.clearSongQueue();
+    return Promise.resolve("Done");
+  }
+
+  shuffle() {
+    this.log.info("MusicControl.shuffle()");
+    let playlist = this._audioOut.getSongQueue();
+    this._audioOut.clearSongQueue();
+    while (playlist.length > 0) {
+      let index = Math.floor(Math.random() * playlist.length);
+      this._audioOut.queueSong(playlist[index]);
+      playlist.splice(index, 1);
+    }
     return Promise.resolve("Done");
   }
 

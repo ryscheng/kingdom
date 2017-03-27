@@ -8,6 +8,24 @@ class LightControl {
     // Public properties
     this.name = "Light Control";
     this.intents = {
+      "on": {
+        "name": "lightson",
+        "description": "Turn all lights on",
+        "callback": this.lightsOnOff.bind(this, "on"),
+        "parameters": [],
+        "utterances": [
+          "let there be light",
+        ],
+      },
+      "off": {
+        "name": "lightsoff",
+        "description": "Turn all lights off",
+        "callback": this.lightsOnOff.bind(this, "off"),
+        "parameters": [],
+        "utterances": [
+          "darkness",
+        ],
+      },
       "onoff": {
         "name": "onoff",
         "description": "Turn all lights on or off",

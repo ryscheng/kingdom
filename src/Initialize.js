@@ -33,7 +33,7 @@ function initDrivers() {
   const AudioOut = require("./drivers/AudioOut");
   const SpeechIn = require("./drivers/SpeechIn");
   const ClapDetector = require("./drivers/ClapDetector");
-  const Camera = require("./drivers/Camera");
+  //const Camera = require("./drivers/Camera");
 
   return {
     "lights": new Lights(config.get("app.name"), config.get("hue.addr")),

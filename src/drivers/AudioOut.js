@@ -7,7 +7,7 @@ const ChildProcess = require("child_process");
 const Volume = require("pcm-volume");
 const Speaker = require("speaker");
 const winston = require("winston");
-const Q = require("q");
+//const Q = require("q");
 
 const ESPEAK_CMD = "espeak";
 
@@ -109,7 +109,7 @@ class AudioOut extends EventEmitter {
     this._ongoingSay++;
     this._emitAudioEvt();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       let process = ChildProcess.spawn(ESPEAK_CMD, [ phrase ], { "detached": false });
       //process.stdout.on("data", () => {});
       //process.stderr.on("data", () => {});
