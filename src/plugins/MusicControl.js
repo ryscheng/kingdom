@@ -87,7 +87,9 @@ class MusicControl {
     };
     **/
 
-    this._claps.onClaps(3, 2000, this._onClap.bind(this));
+    if (this._claps !== null && typeof this._claps !== "undefined") {
+      this._claps.onClaps(3, 2000, this._onClap.bind(this));
+    }
     //clapDetector.onClap(this._onClap.bind(this));
   }
 

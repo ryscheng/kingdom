@@ -24,7 +24,7 @@ class SpeakInterface extends EventEmitter {
     this._audioOn = false;
     this._poorScoreCount = 0;
     // Event handlers
-    this._periodicId = setInterval(this._periodic.bind(this), PERIODIC_INTERVAL);
+    this._periodicId = setInterval(this._periodic.bind(this, false), PERIODIC_INTERVAL);
     this._audioOut.on("audio", this._onAudioChange.bind(this));
     this._speechIn.on("command", this._onCommand.bind(this));
     this.log.info("SpeakInterface initialized");
@@ -51,7 +51,7 @@ class SpeakInterface extends EventEmitter {
     this._speechIn.restart();
   }
 
-  _periodic() {
+  _periodic(audioChange) {
     this.log.info("SpeakInterface periodic function running: running=" + this._speechIn.isRunning() + ",audio=" + this._audioOut.isPlaying() + ",poorScoreCount=" + this._poorScoreCount);
 
     // if music is playing, stop the speech recognition
@@ -62,9 +62,10 @@ class SpeakInterface extends EventEmitter {
     } else if (!this._speechIn.isRunning() && !this._audioOut.isPlaying()) {
       this.log.info("Starting SpeechIn, no music");
       this._resetPocketsphinx();
-    // if we haven't seen good scores in a while
-    } else if (this._speechIn.isRunning() && this._poorScoreCount > RESTART_THRESHOLD) {
-      this.log.info("Restarting SpeechIn, haven't seen a good recognition in " + this._poorScoreCount + " tries");
+    // Just periodically restart speech recognition
+    } else if (this._speechIn.isRunning() && !audioChange) { //&& this._poorScoreCount > RESTART_THRESHOLD) {
+      //this.log.info("Restarting SpeechIn, haven't seen a good recognition in " + this._poorScoreCount + " tries");
+      this.log.info("Periodic restart SpeechIn");
       this._resetPocketsphinx();
     }
 
@@ -73,7 +74,7 @@ class SpeakInterface extends EventEmitter {
   _onAudioChange(audio) {
     this.log.info("SpeakInterface sees that audio:" + audio);
     this._audioOn = audio;
-    this._periodic();
+    this._periodic(true);
   }
 
   _indicateReady() {
