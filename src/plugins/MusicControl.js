@@ -87,8 +87,10 @@ class MusicControl {
     };
     **/
 
-    if (this._claps !== null && typeof this._claps !== "undefined") {
+    if (typeof this._claps !== "undefined" && this._claps !== null) {
       this._claps.onClaps(3, 2000, this._onClap.bind(this));
+    } else {
+      this.log.warn("MusicControl cannot access claps driver");
     }
     //clapDetector.onClap(this._onClap.bind(this));
   }
