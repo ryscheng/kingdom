@@ -1,6 +1,13 @@
 # Kingdom
 
-Kingdom is an intelligent personal assistant, written for Node.js.
+Kingdom is an intelligent personal assistant, written to run locally on Node.js. 
+All plugins, including [speech recognition](https://github.com/cmusphinx/pocketsphinx), are run locally.
+This way, you don't need to send your voice data to the cloud to get simple things done. 
+
+Current plugins include:
+- Weather
+- Control your Hue lighting system
+- Hype Machine music player
 
 ## Dependencies
 Before running Kingdom, make sure to install all of the system dependencies.
@@ -27,8 +34,6 @@ To start Kingdom:
 ```bash
   npm start
 ```
-
-
 
 ## Developing
 
