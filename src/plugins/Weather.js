@@ -3,7 +3,7 @@
 let weather = require("weather-js");
 let Q = require("q");
 
-const DEFAULT = "98195";
+const DEFAULT = "94104";
 
 class Weather {
   constructor() {
