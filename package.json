@@ -40,7 +40,7 @@
     "express": "^4.14.1",
     "google-auth-library": "^0.10.0",
     "google-cloud": "^0.46.2",
-    "googleapis": "^16.1.0",
+    "googleapis": "^59.0.0",
     "hue.js": "^0.2.13",
     "hype.js": "0.0.4",
     "lame": "^1.2.4",
