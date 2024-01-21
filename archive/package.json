@@ -1,0 +1,61 @@
+{
+  "name": "kingdom",
+  "version": "1.0.0",
+  "description": "Personal Assistant",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "gulp test",
+    "generateUtterances": "node src/generateUtterances.js models/utterances.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryscheng/kingdom.git"
+  },
+  "keywords": [
+    "ipa",
+    "assistant",
+    "home"
+  ],
+  "author": "Raymond Cheng <me@raymondcheng.net> (https://raymondcheng.net)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ryscheng/kingdom/issues"
+  },
+  "homepage": "https://github.com/ryscheng/kingdom#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "fs-extra": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0",
+    "gulp-eslint": "~3.0.1",
+    "gulp-istanbul": "^1.1.1",
+    "gulp-jsdoc3": "^1.0.1",
+    "gulp-mocha": "^3.0.1",
+    "run-sequence": "^1.2.2"
+  },
+  "dependencies": {
+    "clap-detector": "^0.4.1",
+    "config": "^1.25.1",
+    "express": "^4.14.1",
+    "google-auth-library": "^0.10.0",
+    "google-cloud": "^0.46.2",
+    "googleapis": "^16.1.0",
+    "hue.js": "^0.2.13",
+    "hype.js": "0.0.4",
+    "lame": "^1.2.4",
+    "lazystream": "^1.0.0",
+    "mic": "^2.1.1",
+    "multipipe": "^1.0.2",
+    "needle": "^1.4.5",
+    "opencv": "^6.0.0",
+    "pcm-volume": "^1.0.0",
+    "q": "~1.4.1",
+    "socket.io": "^1.7.2",
+    "speaker": "^0.3.0",
+    "through": "^2.3.8",
+    "weather-js": "^1.0.2",
+    "winston": "^2.3.1",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
