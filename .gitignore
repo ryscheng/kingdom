@@ -3,6 +3,9 @@
 npm-debug.log
 input.wav
 
+### Config
+.env
+
 ### Project
 build/
 dist/

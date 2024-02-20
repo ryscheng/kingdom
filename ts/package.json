@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Personal Assistant",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "bin": "./dist/src/cli.js",
   "main": "./dist/src/index.js",
@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node --loader ts-node/esm src/cli.ts",
-    "test": "NODE_OPTIONS=\"--no-warnings --experimental-vm-modules\" jest"
+    "test": "tsc && NODE_OPTIONS=\"--no-warnings --experimental-vm-modules\" jest"
   },
   "repository": {
     "type": "git",
@@ -49,13 +49,18 @@
   "dependencies": {
     "@langchain/community": "^0.0.19",
     "@langchain/openai": "^0.0.12",
+    "audio-buffer": "^5.0.0",
+    "audio-loader": "^1.0.3",
+    "audio-play": "^2.3.1",
     "dayjs": "^1.11.10",
     "deepspeech": "^0.9.3",
     "langchain": "^0.1.4",
     "lodash": "^4.17.21",
     "mic": "^2.1.2",
     "node-fetch": "^3.3.2",
+    "openweather-api-node": "^3.1.2",
     "ts-adt": "^2.1.2",
+    "winston": "^3.11.0",
     "yargs": "^17.7.2"
   }
 }
